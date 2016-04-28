@@ -1,8 +1,0 @@
-# depslib dependency file v1.0
-1461641574 source:k:\hl-2m反馈程序\fbc-c-version\pid\src\main.c
-	<stdio.h>
-	<stdlib.h>
-
-1461653685 source:k:\hl-2m反馈程序\fbc-c-version\pid\functions\functions.c
-	<stdio.h>
-
