@@ -1,18 +1,21 @@
 # depslib dependency file v1.0
-1461893318 source:k:\fbc-c-version\pid\src\main.c
+1461913411 source:k:\fbc-c-version\pid\src\main.c
 	<stdio.h>
 	<stdlib.h>
 	"../headers/function.h"
 	"../headers/structs.h"
 	"../headers/macros.h"
 
-1461893202 k:\fbc-c-version\pid\headers\function.h
+1461913390 k:\fbc-c-version\pid\headers\function.h
+	"structs.h"
 
-1461825919 k:\fbc-c-version\pid\headers\structs.h
+1461909216 k:\fbc-c-version\pid\headers\structs.h
 	"macros.h"
 
-1461825927 k:\fbc-c-version\pid\headers\macros.h
+1461911892 k:\fbc-c-version\pid\headers\macros.h
 
-1461893129 source:k:\fbc-c-version\pid\functions\functions.c
+1461913812 source:k:\fbc-c-version\pid\functions\functions.c
 	<stdio.h>
+	"../headers/macros.h"
+	"../headers/structs.h"
 

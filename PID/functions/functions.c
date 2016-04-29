@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include "../headers/macros.h"
+#include "../headers/structs.h"
 
 //rotate just 1 element for array;
 void Rotate_1D_Array(float *array_name,unsigned int len,float elem){
@@ -8,4 +10,52 @@ void Rotate_1D_Array(float *array_name,unsigned int len,float elem){
         }
     array_name[0]=elem;
 }
+
+//get the x,y value of one vec node;
+VEC_Node get_VEC_Node(VEC_CURVE vec_Curve, int subscript){
+    int i;
+    if(subscript<=vec_Curve.vec_Nodes[0].x)
+        return vec_Curve.vec_Nodes[0];
+    else if(subscript>=vec_Curve.vec_Nodes[vec_Curve.nodeNo-1].x)
+        return vec_Curve.vec_Nodes[vec_Curve.nodeNo-1];
+        else {
+            for (i=1;i<vec_Curve.nodeNo;i++)
+                if(subscript==vec_Curve.vec_Nodes[i].x)
+                    return vec_Curve.vec_Nodes[i];
+                else if(subscript<vec_Curve.vec_Nodes[i].x){
+                        VEC_Node tempnode;
+                        tempnode.y=(vec_Curve.vec_Nodes[i-1].y+
+                        (vec_Curve.vec_Nodes[i].y-vec_Curve.vec_Nodes[i-1].y)/
+                        (vec_Curve.vec_Nodes[i].x-vec_Curve.vec_Nodes[i-1].x)*
+                        (subscript-vec_Curve.vec_Nodes[i-1].x));
+                        tempnode.x=subscript;
+                        return tempnode;
+                        }
+              }
+}
+
+//PID_Calculator(){}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
