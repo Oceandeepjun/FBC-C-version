@@ -31,7 +31,13 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="main.c">
+		<Unit filename="functions/functions.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="headers/function.h" />
+		<Unit filename="headers/macros.h" />
+		<Unit filename="headers/structs.h" />
+		<Unit filename="src/main.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>
