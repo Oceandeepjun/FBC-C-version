@@ -15,7 +15,7 @@ int main()
     c[0]=a;
     printf("%d\n",sizeof(b));
     printf("%d\n",c[0][3]);
-    ----------------------------------
+   /* ----------------------------------
     float a[3]={2,5,6};
     Rotate_1D_Array(a,3,8);
     unsigned int i=0;
