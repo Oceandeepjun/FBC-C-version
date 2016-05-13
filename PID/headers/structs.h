@@ -3,8 +3,8 @@
 #include "macros.h"
 
 typedef struct VECNode{
-    VEC_Node_Type y;
-    int x;              //time unit: ms
+    VEC_NODE_TYPE y;
+    VEC_NODE_TYPE x;              //time unit: ms
 }VEC_Node;
 
 
@@ -20,5 +20,16 @@ typedef struct VECPACKAGE{
     VEC_CURVE *vec_Package[VEC_CURVE_NUM];   //address array;
 }VEC_PACKAGE;
 
+typedef struct VECINF{
+	char Chname[3];
+	short ChanNo;
+	short nodeNo;
+	short DataType;
+	short Address;
+	float XSumCheck;
+	float YSumCheck;
+	float Frequency;
+	char Unit[3];
+}VEC_INF;
 
 #endif // STRUCTS_H_INCLUDED
