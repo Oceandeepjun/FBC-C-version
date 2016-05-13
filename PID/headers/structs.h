@@ -11,7 +11,7 @@ typedef struct VECNode{
 //one of VEC curves;
 typedef struct VECCURVE{
     int nodeNo;
-    vec_Node_t *vec_Nodes;          //2D array of vec data(x,y), no interpolation;
+    vec_Node_t *vec_Nodes;
 }vec_Curve_t;
 
 

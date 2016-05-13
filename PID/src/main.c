@@ -49,7 +49,6 @@ int main()
 	struct stat vecinf_Status;
 	stat("99925vec.inf",&vecinf_Status);                              	//get vecinf file size
 	long vecinf_Size=vecinf_Status.st_size;
-
 	FILE* vecinfp=fopen("99925vec.inf","rb");
 	char* vecinf_Buffer=(char*)malloc(vecinf_Size);
 	fread(vecinf_Buffer,VECINF_STRUCT_SIZE,vecinf_Size/VECINF_STRUCT_SIZE,vecinfp);  	//read vecinf into buffer
@@ -82,45 +81,46 @@ int main()
 		}
 	free(vecinf_Buffer);
 
-	int a=8;
+	int a=0;
 	printf("%s\n%d\n%d\n%d\n%d\n%.1f\n%.1f\n%.1f\n%s\n",vecinf_Array[a].Chname,
 			vecinf_Array[a].ChanNo,vecinf_Array[a].nodeNo,vecinf_Array[a].DataType,vecinf_Array[a].Address,
 			vecinf_Array[a].XSumCheck,vecinf_Array[a].YSumCheck,vecinf_Array[a].Frequency,
 			vecinf_Array[a].Unit);
 
 
-	struct stat vecdat_Status;
-	stat("99925vec.dat",&vecdat_Status);                              	//get vecinf file size
-	long vecdat_Size=vecdat_Status.st_size;
-
-
-	char *vecdat_Buffer=(char*)malloc(vecdat_Size);
-	FILE *vecdatp=fopen("99925vec.dat","rb");
-	fread(vecdat_Buffer,1,1,vecdatp);
-	fclose(vecdatp);
-
-	vec_Curve_t vec_Curve_array[vecinf_Size/VECINF_STRUCT_SIZE];	//vec curve array;
-
-	vec_Curve_Package_t vec_Curve_p;								//used for delivering,can be removed.
-	vec_Curve_p.vec_Package=vec_Curve_array;
-
-	int curvenum=0;
-	for(curvenum=0;curvenum<vecinf_Size/VECINF_STRUCT_SIZE;curvenum++){
-
-		vec_Node_t vecnodes[vecinf_Array[curvenum].nodeNo];
-		int nodenum;
-		for(nodenum=0;nodenum<vecinf_Array[curvenum].nodeNo;nodenum++){
-
-		}
-		vec_Curve_array[curvenum].nodeNo=vecinf_Array[curvenum].nodeNo;
-		}
-	free(vecdat_Buffer);
-
-
-
-
-
-
-
+//	struct stat vecdat_Status;
+//	stat("99925vec.dat",&vecdat_Status);                              	//get vecinf file size
+//	long vecdat_Size=vecdat_Status.st_size;
+//
+//
+//	vec_Node_t *vecdat_Buffer=(vec_Node_t*)malloc(vecdat_Size);
+//	FILE *vecdatp=fopen("99925vec.dat","rb");
+//	fread(vecdat_Buffer,sizeof(vec_Node_t),vecdat_Size/sizeof(vec_Node_t),vecdatp);
+//	fclose(vecdatp);
+//
+//	vec_Curve_t vec_Curve_array[vecinf_Size/VECINF_STRUCT_SIZE];	//vec curve array;
+//
+////	vec_Curve_Package_t vec_Curve_p;								//used for delivering,can be removed.
+////	vec_Curve_p.vec_Package=vec_Curve_array;
+//
+//	int curvenum=0;
+//	int nodeNo_Sum=0;
+//	for(curvenum=0;curvenum<vecinf_Size/VECINF_STRUCT_SIZE;curvenum++){  //Initialize curve array
+//		vec_Curve_array[curvenum].nodeNo=vecinf_Array[curvenum].nodeNo;
+//		vec_Curve_array[curvenum].vec_Nodes=vecdat_Buffer+nodeNo_Sum;
+//		nodeNo_Sum+=vecinf_Array[curvenum].nodeNo;    //nodeNo_Sum+=sizeof(vec_Node_t)/sizeof(float)*vecinf_Array[curvenum].nodeNo;
+//		}
+//	int position=0;
+//	vec_Node_t nodes[vec_Curve_array[position].nodeNo];
+//	memcpy(nodes,vec_Curve_array[position].vec_Nodes,vec_Curve_array[position].nodeNo);
+//	//nodes=vec_Curve_array[position].vec_Nodes;
+//	while(--vec_Curve_array[position].nodeNo>0)
+//	printf("%f.1,%f.1  ",nodes[0].y,nodes[1].x);
+//
+//
+//
+//
+//
+//	free(vecdat_Buffer);
     return 0;
 }
