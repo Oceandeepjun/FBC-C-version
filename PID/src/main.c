@@ -74,7 +74,7 @@ int main()
 	short sv[4];
 	float fv[3];
 	char un[2];
-	memcpy(cn,st+((count-1)*blockl+0),2);//must mem convert!
+	memcpy(cn,st+((count-1)*blockl+0),2);//must be mem converting!
 	memcpy(fv,st+((count-1)*blockl+10),12);
 	memcpy(sv,st+((count-1)*blockl+2),8);
 	memcpy(un,st+((count-1)*blockl+22),2);
