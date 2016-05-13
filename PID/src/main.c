@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+
 #include "../headers/function.h"
 #include "../headers/structs.h"
 #include "../headers/macros.h"
-#include <string.h>
+
 
 int main()
 {
@@ -43,54 +46,81 @@ int main()
     printf("%f\n%d",nod.y,nod.x);   //correct result;
     ----------------------------------------*/
 	//---------------read vec.inf----------------------
-//	FILE *fp,*fp1;
-//	fp = fopen("aa.txt","wb");
-//	typedef struct {
-//		float va;
-//		float vb;
-//	}ss;
-//	ss st={123,456};
-//	fwrite(&st,sizeof(st),1,fp);
-//	fclose(fp);
-//	char *fvp=(char*)malloc(sizeof(ss));
-//	float fv;
-//
-//	fp1=fopen("aa.txt","rb");
-//	fread(fvp,sizeof(st),1,fp1);
-//	memcpy(&fv,fvp+4,4);
-//	fclose(fp1);
-//	printf("%f",fv);
-//	free(fvp);
+	struct stat vecinf_Status;
+	stat("99925vec.inf",&vecinf_Status);                              	//get vecinf file size
+	long vecinf_Size=vecinf_Status.st_size;
 
+	FILE* vecinfp=fopen("99925vec.inf","rb");
+	char* vecinf_Buffer=(char*)malloc(vecinf_Size);
+	fread(vecinf_Buffer,VECINF_STRUCT_SIZE,vecinf_Size/VECINF_STRUCT_SIZE,vecinfp);  	//read vecinf into buffer
+	fclose(vecinfp);
 
-	FILE* vecfp=fopen("99925vec.inf","rb");
-	//VEC_INF vec_INF;
-	int blockl=24;
-	int count=3;
-	char* st=(char*)malloc(24*count);
-
-	fread(st,blockl,count,vecfp);
+	vec_Inf_t vecinf_Array[vecinf_Size/VECINF_STRUCT_SIZE];
+	int count;
 	char cn[2];
 	short sv[4];
 	float fv[3];
 	char un[2];
-	memcpy(cn,st+((count-1)*blockl+0),2);
-	memcpy(cn,st+((count-1)*blockl+0),2);//must be mem converting!
-	memcpy(fv,st+((count-1)*blockl+10),12);
-	memcpy(sv,st+((count-1)*blockl+2),8);
-	memcpy(un,st+((count-1)*blockl+22),2);
-	fclose(vecfp);
-	printf("%c\t%c\n%d\t%d\t%d\t%d\n%f\t%f\t%f\n%c\n",cn[0],cn[1],
-			sv[0],sv[1],sv[2],sv[3],
-			fv[0],fv[1],fv[2],
-			un[0],un[1]);
+	for(count=0;count<vecinf_Size/VECINF_STRUCT_SIZE;count++){            		//move vecinf into buffered array
+		memcpy(cn,vecinf_Buffer+((count-1)*VECINF_STRUCT_SIZE+0),2);
+		memcpy(cn,vecinf_Buffer+((count-1)*VECINF_STRUCT_SIZE+0),2);   			//must convert in mem!
+		memcpy(fv,vecinf_Buffer+((count-1)*VECINF_STRUCT_SIZE+10),12);
+		memcpy(sv,vecinf_Buffer+((count-1)*VECINF_STRUCT_SIZE+2),8);
+		memcpy(un,vecinf_Buffer+((count-1)*VECINF_STRUCT_SIZE+22),2);
+		vecinf_Array[count].Chname[0]=cn[0];
+		vecinf_Array[count].Chname[1]=cn[1];
+		vecinf_Array[count].Chname[2]='\0';
+		vecinf_Array[count].ChanNo=sv[0];
+		vecinf_Array[count].nodeNo=sv[1];
+		vecinf_Array[count].DataType=sv[2];
+		vecinf_Array[count].Address=sv[3];
+		vecinf_Array[count].XSumCheck=fv[0];
+		vecinf_Array[count].YSumCheck=fv[1];
+		vecinf_Array[count].Frequency=fv[2];
+		vecinf_Array[count].Unit[0]=un[0];
+		vecinf_Array[count].Unit[1]='\0';
+		}
+	free(vecinf_Buffer);
+
+	int a=8;
+	printf("%s\n%d\n%d\n%d\n%d\n%.1f\n%.1f\n%.1f\n%s\n",vecinf_Array[a].Chname,
+			vecinf_Array[a].ChanNo,vecinf_Array[a].nodeNo,vecinf_Array[a].DataType,vecinf_Array[a].Address,
+			vecinf_Array[a].XSumCheck,vecinf_Array[a].YSumCheck,vecinf_Array[a].Frequency,
+			vecinf_Array[a].Unit);
+
+
+	struct stat vecdat_Status;
+	stat("99925vec.dat",&vecdat_Status);                              	//get vecinf file size
+	long vecdat_Size=vecdat_Status.st_size;
+
+
+	char *vecdat_Buffer=(char*)malloc(vecdat_Size);
+	FILE *vecdatp=fopen("99925vec.dat","rb");
+	fread(vecdat_Buffer,1,1,vecdatp);
+	fclose(vecdatp);
+
+	vec_Curve_t vec_Curve_array[vecinf_Size/VECINF_STRUCT_SIZE];	//vec curve array;
+
+	vec_Curve_Package_t vec_Curve_p;								//used for delivering,can be removed.
+	vec_Curve_p.vec_Package=vec_Curve_array;
+
+	int curvenum=0;
+	for(curvenum=0;curvenum<vecinf_Size/VECINF_STRUCT_SIZE;curvenum++){
+
+		vec_Node_t vecnodes[vecinf_Array[curvenum].nodeNo];
+		int nodenum;
+		for(nodenum=0;nodenum<vecinf_Array[curvenum].nodeNo;nodenum++){
+
+		}
+		vec_Curve_array[curvenum].nodeNo=vecinf_Array[curvenum].nodeNo;
+		}
+	free(vecdat_Buffer);
 
 
 
-//	printf("%s\n%d\n%d\n%d\n%d\n%f\n%f\n%f\n%s\n",vec_INF.Chname,
-//			vec_INF.ChanNo,vec_INF.nodeNo,vec_INF.DataType,vec_INF.Address,
-//			vec_INF.XSumCheck,vec_INF.YSumCheck,vec_INF.Frequency,
-//			vec_INF.Unit);
+
+
+
 
     return 0;
 }

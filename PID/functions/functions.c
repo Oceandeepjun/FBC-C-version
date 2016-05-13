@@ -12,7 +12,7 @@ void Rotate_1D_Array(float *array_name,unsigned int len,float elem){
 }
 
 //get the x,y value of one vec node;
-VEC_Node get_VEC_Node(VEC_CURVE vec_Curve, int subscript){
+vec_Node_t get_VEC_Node(vec_Curve_t vec_Curve, int subscript){
     int i;
     if(subscript<=vec_Curve.vec_Nodes[0].x)
         return vec_Curve.vec_Nodes[0];
@@ -23,7 +23,7 @@ VEC_Node get_VEC_Node(VEC_CURVE vec_Curve, int subscript){
                 if(subscript==vec_Curve.vec_Nodes[i].x)
                     return vec_Curve.vec_Nodes[i];
                 else if(subscript<vec_Curve.vec_Nodes[i].x){
-                        VEC_Node tempnode;
+                		vec_Node_t tempnode;
                         tempnode.y=(vec_Curve.vec_Nodes[i-1].y+
                         (vec_Curve.vec_Nodes[i].y-vec_Curve.vec_Nodes[i-1].y)/
                         (vec_Curve.vec_Nodes[i].x-vec_Curve.vec_Nodes[i-1].x)*
@@ -34,7 +34,7 @@ VEC_Node get_VEC_Node(VEC_CURVE vec_Curve, int subscript){
               }
 }
 
-//PID_Calculator(){}
+
 
 
 
