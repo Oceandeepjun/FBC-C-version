@@ -14,12 +14,6 @@ typedef struct VECCURVE{
     vec_Node_t *vec_Nodes;
 }vec_Curve_t;
 
-
-//all the vec data;
-typedef struct VECPACKAGE{
-	vec_Curve_t *vec_Package[VEC_CURVE_NUM];   //address array;
-}vec_Curve_Package_t;
-
 typedef struct VECINF{
 	char Chname[3];
 	short ChanNo;
