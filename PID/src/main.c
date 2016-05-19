@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+/*---------For Xml option------------*/
+#include <libxml/xmlmemory.h>
+#include <libxml/parser.h>
+#define IN_LIBXML
 
 #include "../headers/function.h"
 #include "../headers/structs.h"
@@ -84,12 +88,13 @@ int main()
 
 		//-----------------------display vecinf structs--------------------------
 
-		printf("%s  %d  %d  %d  %d  %.1f  %.1f  %.1f  %s\n",vecinf_Array[count].Chname,
-					vecinf_Array[count].ChanNo,vecinf_Array[count].nodeNo,
-					vecinf_Array[count].DataType,vecinf_Array[count].Address,
-					vecinf_Array[count].XSumCheck,vecinf_Array[count].YSumCheck,
-					vecinf_Array[count].Frequency,
-					vecinf_Array[count].Unit);
+//		printf("%2s  %3d  %3d  %d  %6d  %8.1f  %8.1f  %8.1f  %2s\n",vecinf_Array[count].Chname,
+//					vecinf_Array[count].ChanNo,vecinf_Array[count].nodeNo,
+//					vecinf_Array[count].DataType,vecinf_Array[count].Address,
+//					vecinf_Array[count].XSumCheck,vecinf_Array[count].YSumCheck,
+//					vecinf_Array[count].Frequency,
+//					vecinf_Array[count].Unit);
+
 		}
 	free(vecinf_Buffer);
 
@@ -113,11 +118,66 @@ int main()
 		}
 
 	/*----------------------display the vec nodes at position-------------------*/
+//	int position=1;
+//	int i = 0;
+//	for(i=0;i<vec_Curve_array[position].nodeNo;i++)
+//	printf("%8.1f %8.1f\n",vec_Curve_array[position].vec_Nodes[i].y,vec_Curve_array[position].vec_Nodes[i].x);
 	int position=1;
 	int i = 0;
 	for(i=0;i<vec_Curve_array[position].nodeNo;i++)
-	printf("%.1f , %.1f\n",vec_Curve_array[position].vec_Nodes[i].y,vec_Curve_array[position].vec_Nodes[i].x);
-
+	printf("%8.1f %8.1f\n",vec_Curve_array[position].vec_Nodes[i].y,vec_Curve_array[position].vec_Nodes[i].x);
 	free(vecdat_Buffer);
+
+	xmlDocPtr doc;
+	xmlNodePtr cur;
+	if(!xmlFree) xmlMemGet(&xmlFree,&xmlMalloc,&xmlRealloc,NULL);//only for windows!
+
+//	xmlKeepBlanksDefault(0);
+	doc = xmlParseFile("2MDPF-new.xml");
+	//doc = xmlParseFile("aa.xml");
+	cur = xmlDocGetRootElement(doc);
+	if (cur!=NULL)
+		printf("%s\n",cur->name);
+
+	if(cur->children!=NULL){
+		cur = cur->children;
+		printf("%s\n",cur->name);
+		xmlGet
+		}
+	else
+		printf("Have no children node!");
+
+
+
+//	printf("name=%s\n",cur->name);
+//
+//		if (cur->children!=NULL)
+//		cur = cur->children;
+//
+//	    while(cur != NULL) {
+//	        printf("  name=%s\n",cur->name);
+//	        if(cur->children==NULL&&cur->next!=NULL)
+//	        	cur = cur->next;
+//
+//	        else {
+//	        	cur = cur->children;
+//	        	while(cur!=NULL){
+//
+//	        		printf("    name=%s\n",cur->name);
+//	        		if(cur->next==NULL)
+//	        			break;
+//	        		cur=cur->next;
+//	        	}
+//	        	cur=cur->parent;
+//	        }
+//
+//	        if(cur->next!=NULL)
+//	        cur = cur->next;
+//	    }
+
+	xmlFree(cur);
+	xmlFreeDoc(doc);
+
     return 0;
+
 }

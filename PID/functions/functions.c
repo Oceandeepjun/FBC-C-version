@@ -2,7 +2,7 @@
 #include "../headers/macros.h"
 #include "../headers/structs.h"
 
-//rotate just 1 element for array;
+/*rotate just 1 element for array*/
 void Rotate_1D_Array(float *array_name,unsigned int len,float elem){
     unsigned int i;
     for(i=1; i<len ;i++){
@@ -11,7 +11,7 @@ void Rotate_1D_Array(float *array_name,unsigned int len,float elem){
     array_name[0]=elem;
 }
 
-//get the x,y value of one vec node;
+/*get the x,y value of one vec node;*/
 vec_Node_t get_VEC_Node(vec_Curve_t vec_Curve, int subscript){
     int i;
     if(subscript<=vec_Curve.vec_Nodes[0].x)

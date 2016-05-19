@@ -1,0 +1,1755 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 编辑使用 XMLSpy v2006 U (http://www.altova.com) 由 any (any) -->
+<!-- 编辑使用 XMLSpy v2006 U (http://www.altova.com) 由 any (any) -->
+<!--  由 Dr Song xianming  设计.  -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:simpleType name="opMode">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="2"/>
+			<xs:enumeration value="3"/>
+			<xs:enumeration value="4"/>
+			<!-- null=0,only positive=1 only negative=2,both pos and neg=3, multi zerocross=4-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="zeroOne">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="1"/>
+			<!-- -->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="DPF">
+		<xs:annotation>
+			<xs:documentation>Units in this file: current=kA, voltage=V, length=mm, time=ms</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="version" type="xs:decimal" default="11.0"/>
+				<xs:element name="operator" type="xs:string" default="songxm"/>
+				<xs:element name="shotnum" type="xs:string" default="20000"/>
+				<xs:element name="CC">
+					<xs:annotation>
+						<xs:documentation>central control group</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<!-- 反馈指令 -->
+							<xs:element name="FB" type="zeroOne"/>
+							<!-- 运行模式0,1,2 -->
+							<xs:element name="OperationMode">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="2"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- 反馈模式 -->
+							<xs:element name="FBMode" type="zeroOne"/>
+							<!-- 等离子体控制模式  0=RZIP， 1=isoFlux, 2=Gap -->
+							<xs:element name="CtrlMode">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="10"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RZ 计算模式 0=磁通磁探针模式，1=EFIT模式  -->
+							<xs:element name="RZMode">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="10"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="IPmax">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="1200"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="Tflattop">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="5000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- FBStart   反馈控制系统中IP等曲线的反馈起始时刻 -->
+							<xs:element name="FBStart">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- FBStart   反馈控制系统中IP等曲线的反馈起始时刻 -->
+							<xs:element name="DischargeStart">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="-3000"/>
+										<xs:maxInclusive value="-1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- FBStart   反馈控制系统中IP等曲线的反馈起始时刻 -->
+							<xs:element name="DischargeEnd">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="5000"/>
+										<xs:maxInclusive value="8000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- 除了与CS的耦合外，只考虑3种类型的耦合，1=8U和8L之间的耦合，2=8U和7U之间的耦合/8L和7L之间的耦合，1=8U和7L之间的耦合/8L和7U之间的耦合  -->
+							<!-- 8U和8L之间的耦合  -->
+							<xs:element name="CPF8U8L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="200"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- 8U和7U之间的耦合/8L和7L之间的耦合  -->
+							<xs:element name="CPF8U7U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="200"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!--  8U和7L之间的耦合/8L和7U之间的耦合  -->
+							<xs:element name="CPF8U7L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="200"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF1U线圈与CS线圈的解耦合系数  -->
+							<xs:element name="CPF1U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF1L线圈与CS线圈的解耦合系数  -->
+							<xs:element name="CPF1L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF2U线圈与CS线圈的解耦合系数  -->
+							<xs:element name="CPF2U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF2L线圈与CS线圈的解耦合系数  -->
+							<xs:element name="CPF2L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF3U线圈与CS线圈的解耦合系数  -->
+							<xs:element name="CPF3U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF3L线圈与CS线圈的解耦合系数  -->
+							<xs:element name="CPF3L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF4U线圈与CS线圈的解耦合系数  -->
+							<xs:element name="CPF4U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF4L线圈与CS线圈的解耦合系数  -->
+							<xs:element name="CPF4L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF5U线圈与CS线圈的解耦合系数  -->
+							<xs:element name="CPF5U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF5L线圈与CS线圈的解耦合系数  -->
+							<xs:element name="CPF5L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF6U线圈与CS线圈的解耦合系数  -->
+							<xs:element name="CPF6U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF6L线圈与CS线圈的解耦合系数  -->
+							<xs:element name="CPF6L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF7U线圈与CS线圈的解耦合系数  -->
+							<xs:element name="CPF7U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF7L线圈与CS线圈的解耦合系数  -->
+							<xs:element name="CPF7L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF8U线圈与CS线圈的解耦合系数  -->
+							<xs:element name="CPF8U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF8L线圈与CS线圈的解耦合系数  -->
+							<xs:element name="CPF8L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:any minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="MG">
+					<xs:annotation>
+						<xs:documentation>motor generator group</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<!-- 1#电机指令 -->
+							<xs:element name="MG1" type="zeroOne"/>
+							<!-- 2#电机指令 -->
+							<xs:element name="MG2" type="zeroOne"/>
+							<!-- 3#电机指令 -->
+							<xs:element name="MG3" type="zeroOne"/>
+							<!-- 4#电机指令 -->
+							<xs:element name="MG4" type="zeroOne"/>
+							<!-- W1反馈起始时刻 -->
+							<xs:element name="FBW1Start">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="-6000"/>
+										<xs:maxInclusive value="5000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- W2反馈起始时刻 -->
+							<xs:element name="FBW2Start">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="-6000"/>
+										<xs:maxInclusive value="5000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- W3反馈起始时刻 -->
+							<xs:element name="FBW3Start">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="-6000"/>
+										<xs:maxInclusive value="5000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- W4反馈起始时刻 -->
+							<xs:element name="FBW4Start">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="-6000"/>
+										<xs:maxInclusive value="5000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- W1电压最大修正量 -->
+							<xs:element name="MaxdW1">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="50"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- W2电压最大修正量 -->
+							<xs:element name="MaxdW2">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="50"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- W3电压最大修正量 -->
+							<xs:element name="MaxdW3">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="50"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- W4电压最大修正量 -->
+							<xs:element name="MaxdW4">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="50"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:any minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="PS">
+					<xs:annotation>
+						<xs:documentation>power supply group</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<!-- TF指令 -->
+							<xs:element name="TF" type="zeroOne"/>
+							<!-- OH指令 -->
+							<xs:element name="OH" type="zeroOne"/>
+							<!-- PF1U指令 -->
+							<xs:element name="PF1U" type="zeroOne"/>
+							<!-- PF1L指令 -->
+							<xs:element name="PF1L" type="zeroOne"/>
+							<!-- PF2U指令 -->
+							<xs:element name="PF2U" type="zeroOne"/>
+							<!-- PF2L指令 -->
+							<xs:element name="PF2L" type="zeroOne"/>
+							<!-- PF3U指令 -->
+							<xs:element name="PF3U" type="zeroOne"/>
+							<!-- PF3L指令 -->
+							<xs:element name="PF3L" type="zeroOne"/>
+							<!-- PF4U指令 -->
+							<xs:element name="PF4U" type="zeroOne"/>
+							<!-- PF4L指令 -->
+							<xs:element name="PF4L" type="zeroOne"/>
+							<!-- PF5U指令 -->
+							<xs:element name="PF5U" type="zeroOne"/>
+							<!-- PF5L指令 -->
+							<xs:element name="PF5L" type="zeroOne"/>
+							<!-- PF6U指令 -->
+							<xs:element name="PF6U" type="zeroOne"/>
+							<!-- PF6L指令 -->
+							<xs:element name="PF6L" type="zeroOne"/>
+							<!-- PF7U指令 -->
+							<xs:element name="PF7U" type="zeroOne"/>
+							<!-- PF7L指令 -->
+							<xs:element name="PF7L" type="zeroOne"/>
+							<!-- PF8U指令 -->
+							<xs:element name="PF8U" type="zeroOne"/>
+							<!-- PF8L指令 -->
+							<xs:element name="PF8L" type="zeroOne"/>
+							<!-- 欧姆场放电模式： 0=对称方式；1=非对称方式,正组逆变，无负组；2=正组当负组用，负组整流 -->
+							<xs:element name="OHMode">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="10"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- 电机工作模式 0=1号机+2号机+3号机为纵场供电，4号机为极向场供电；  1=1号机+2号机为纵场供电，3号机为极向场供电。 -->
+							<xs:element name="MGMode">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="10"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- VMG 为极向场供电的发电机发电电压  -->
+							<xs:element name="VMG">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="1000"/>
+										<xs:maxInclusive value="3500"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- VOH 欧姆电源线电压  -->
+							<xs:element name="VOH">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="2000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF1U电源线电压  -->
+							<xs:element name="VPF1U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF1L电源线电压  -->
+							<xs:element name="VPF1L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF2U电源线电压  -->
+							<xs:element name="VPF2U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF2L电源线电压  -->
+							<xs:element name="VPF2L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF3U电源线电压  -->
+							<xs:element name="VPF3U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF3L电源线电压  -->
+							<xs:element name="VPF3L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF4U电源线电压  -->
+							<xs:element name="VPF4U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF4L电源线电压  -->
+							<xs:element name="VPF4L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF5U电源线电压  -->
+							<xs:element name="VPF5U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF5L电源线电压  -->
+							<xs:element name="VPF5L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF6U电源线电压  -->
+							<xs:element name="VPF6U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF6L电源线电压  -->
+							<xs:element name="VPF6L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF7U电源线电压  -->
+							<xs:element name="VPF7U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF7L电源线电压  -->
+							<xs:element name="VPF7L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF8U电源线电压  -->
+							<xs:element name="VPF8U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF8L电源线电压  -->
+							<xs:element name="VPF8L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- VOH 欧姆电源电压最大修正量  -->
+							<xs:element name="MaxdUOH">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="200"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF1U电源电压最大修正量  -->
+							<xs:element name="MaxdUPF1U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF1L电源电压最大修正量  -->
+							<xs:element name="MaxdUPF1L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF2U电源电压最大修正量  -->
+							<xs:element name="MaxdUPF2U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF2L电源电压最大修正量  -->
+							<xs:element name="MaxdUPF2L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF3U电源电压最大修正量  -->
+							<xs:element name="MaxdUPF3U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF3L电源电压最大修正量  -->
+							<xs:element name="MaxdUPF3L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF4U电源电压最大修正量  -->
+							<xs:element name="MaxdUPF4U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF4L电源电压最大修正量  -->
+							<xs:element name="MaxdUPF4L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF5U电源电压最大修正量  -->
+							<xs:element name="MaxdUPF5U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF5L电源电压最大修正量  -->
+							<xs:element name="MaxdUPF5L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF6U电源电压最大修正量  -->
+							<xs:element name="MaxdUPF6U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF6L电源电压最大修正量  -->
+							<xs:element name="MaxdUPF6L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF7U电源电压最大修正量  -->
+							<xs:element name="MaxdUPF7U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF7L电源电压最大修正量  -->
+							<xs:element name="MaxdUPF7L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF8U电源电压最大修正量  -->
+							<xs:element name="MaxdUPF8U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF8L电源电压最大修正量  -->
+							<xs:element name="MaxdUPF8L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="10"/>
+										<xs:maxInclusive value="100"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- VOH 欧姆电源逆变保护控制值  -->
+							<xs:element name="InvAngleOH">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="-2.5"/>
+										<xs:maxInclusive value="-1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF1U电源逆变保护控制值  -->
+							<xs:element name="InvAnglePF1U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="-2.5"/>
+										<xs:maxInclusive value="-1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF1L电源逆变保护控制值  -->
+							<xs:element name="InvAnglePF1L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="-2.5"/>
+										<xs:maxInclusive value="-1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF2U电源逆变保护控制值  -->
+							<xs:element name="InvAnglePF2U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="-2.5"/>
+										<xs:maxInclusive value="-1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF2L电源逆变保护控制值  -->
+							<xs:element name="InvAnglePF2L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="-2.5"/>
+										<xs:maxInclusive value="-1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF3U电源逆变保护控制值 -->
+							<xs:element name="InvAnglePF3U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="-2.5"/>
+										<xs:maxInclusive value="-1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF3L电源逆变保护控制值  -->
+							<xs:element name="InvAnglePF3L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="-2.5"/>
+										<xs:maxInclusive value="-1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF4U电源逆变保护控制值  -->
+							<xs:element name="InvAnglePF4U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="-2.5"/>
+										<xs:maxInclusive value="-1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF4L电源逆变保护控制值  -->
+							<xs:element name="InvAnglePF4L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="-2.5"/>
+										<xs:maxInclusive value="-1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF5U电源逆变保护控制值  -->
+							<xs:element name="InvAnglePF5U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="-2.5"/>
+										<xs:maxInclusive value="-1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF5L电源逆变保护控制值  -->
+							<xs:element name="InvAnglePF5L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="-2.5"/>
+										<xs:maxInclusive value="-1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF6U电源逆变保护控制值  -->
+							<xs:element name="InvAnglePF6U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="-2.5"/>
+										<xs:maxInclusive value="-1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF6L电源逆变保护控制值  -->
+							<xs:element name="InvAnglePF6L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="-2.5"/>
+										<xs:maxInclusive value="-1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF7U电源逆变保护控制值 -->
+							<xs:element name="InvAnglePF7U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="-2.5"/>
+										<xs:maxInclusive value="-1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF7L电源逆变保护控制值  -->
+							<xs:element name="InvAnglePF7L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="-2.5"/>
+										<xs:maxInclusive value="-1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF8U电源逆变保护控制值  -->
+							<xs:element name="InvAnglePF8U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="-2.5"/>
+										<xs:maxInclusive value="-1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF8L电源逆变保护控制值  -->
+							<xs:element name="InvAnglePF8L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="-2.5"/>
+										<xs:maxInclusive value="-1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- OH 欧姆线圈最大电流  -->
+							<xs:element name="IOHmax">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="-220"/>
+										<xs:maxInclusive value="220"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF1U线圈最大电流  -->
+							<xs:element name="IPF1Umax">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="15"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF1L线圈最大电流  -->
+							<xs:element name="IPF1Lmax">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="15"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF2U线圈最大电流  -->
+							<xs:element name="IPF2Umax">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="15"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF2L线圈最大电流  -->
+							<xs:element name="IPF2Lmax">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="15"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF3U线圈最大电流  -->
+							<xs:element name="IPF3Umax">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="15"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF3L线圈最大电流  -->
+							<xs:element name="IPF3Lmax">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="15"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF4U线圈最大电流  -->
+							<xs:element name="IPF4Umax">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="15"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF4L线圈最大电流  -->
+							<xs:element name="IPF4Lmax">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="15"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF5U线圈最大电流  -->
+							<xs:element name="IPF5Umax">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="38"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF5L线圈最大电流  -->
+							<xs:element name="IPF5Lmax">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="38"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF6U线圈最大电流  -->
+							<xs:element name="IPF6Umax">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="38"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF6L线圈最大电流  -->
+							<xs:element name="IPF6Lmax">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="38"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF7U线圈最大电流  -->
+							<xs:element name="IPF7Umax">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="42"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF7L线圈最大电流  -->
+							<xs:element name="IPF7Lmax">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="42"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF8U线圈最大电流  -->
+							<xs:element name="IPF8Umax">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="35"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF8L线圈最大电流  -->
+							<xs:element name="IPF8Lmax">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="35"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- OH 欧姆线圈有环流时最大电流  -->
+							<xs:element name="IOHcir">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="1"/>
+										<xs:maxInclusive value="5"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF1U线圈有环流时最大电流  -->
+							<xs:element name="IPF1Ucir">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="1"/>
+										<xs:maxInclusive value="5"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF1L线圈有环流时最大电流  -->
+							<xs:element name="IPF1Lcir">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="1"/>
+										<xs:maxInclusive value="5"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF2U线圈有环流时最大电流  -->
+							<xs:element name="IPF2Ucir">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="1"/>
+										<xs:maxInclusive value="5"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF2L线圈有环流时最大电流  -->
+							<xs:element name="IPF2Lcir">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="1"/>
+										<xs:maxInclusive value="5"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF3U线圈有环流时最大电流  -->
+							<xs:element name="IPF3Ucir">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="1"/>
+										<xs:maxInclusive value="5"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF3L线圈有环流时最大电流  -->
+							<xs:element name="IPF3Lcir">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="1"/>
+										<xs:maxInclusive value="5"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF4U线圈有环流时最大电流  -->
+							<xs:element name="IPF4Ucir">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="1"/>
+										<xs:maxInclusive value="5"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF4L线圈有环流时最大电流  -->
+							<xs:element name="IPF4Lcir">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="1"/>
+										<xs:maxInclusive value="5"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF5U线圈有环流时最大电流  -->
+							<xs:element name="IPF5Ucir">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="1"/>
+										<xs:maxInclusive value="5"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF5L线圈有环流时最大电流  -->
+							<xs:element name="IPF5Lcir">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="1"/>
+										<xs:maxInclusive value="5"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF6U线圈有环流时最大电流  -->
+							<xs:element name="IPF6Ucir">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="1"/>
+										<xs:maxInclusive value="5"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF6L线圈有环流时最大电流  -->
+							<xs:element name="IPF6Lcir">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="1"/>
+										<xs:maxInclusive value="5"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF7U线圈有环流时最大电流  -->
+							<xs:element name="IPF7Ucir">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="1"/>
+										<xs:maxInclusive value="5"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF7L线圈有环流时最大电流  -->
+							<xs:element name="IPF7Lcir">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="1"/>
+										<xs:maxInclusive value="5"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF8U线圈有环流时最大电流  -->
+							<xs:element name="IPF8Ucir">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="1"/>
+										<xs:maxInclusive value="5"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- PF8L线圈有环流时最大电流  -->
+							<xs:element name="IPF8Lcir">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="1"/>
+										<xs:maxInclusive value="5"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:any minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="VAC">
+					<xs:annotation>
+						<xs:documentation>Vaccum vessel group</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<!-- VAC Puff指令 -->
+							<xs:element name="VAC" type="zeroOne"/>
+							<!-- PI指令 -->
+							<xs:element name="PI" type="zeroOne"/>
+							<!-- MBI指令 -->
+							<xs:element name="MBI" type="zeroOne"/>
+							<!-- UneMaximum 密度反馈输出的最高电压  -->
+							<xs:element name="UneMaximum">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="3.6"/>
+										<xs:maxInclusive value="4.6"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- UneMinimum 密度反馈输出的最低电压  -->
+							<xs:element name="UneMinimum">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="2.6"/>
+										<xs:maxInclusive value="3.6"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- neMaximum 密度变化最大值   -->
+							<xs:element name="neMaximum">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.6"/>
+										<xs:maxInclusive value="1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- neMinimum 密度变换最小值  -->
+							<xs:element name="neMinimum">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- NeFBMode 密度反馈控制模式  -->
+							<xs:element name="NeFBMode">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="10"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- TminDelayFB 密度反馈下一次送气最小等待时间  -->
+							<xs:element name="TminDelayFB">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="10"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- smbiTminDelayFB 密度反馈分子束下一次送气最小等待时间  -->
+							<xs:element name="smbiTminDelayFB">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="10"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- 密度测量错误时，密度反馈控制系统相关的送气参数  -->
+							<!-- NrepFB 密度反馈控制系统送气的脉冲个数  -->
+							<xs:element name="NrepFB">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- TdelayFB 密度反馈控制系统送气时的延迟时间  -->
+							<xs:element name="TdelayFB">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- TwidthFB 密度反馈控制系统送气时的脉冲宽度  -->
+							<xs:element name="TwidthFB">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- VheightFB 密度反馈控制系统送气的脉冲高度  -->
+							<xs:element name="VheightFB">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="1000"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:any minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="MAC">
+					<xs:annotation>
+						<xs:documentation>Machine group</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<!-- MAC指令 负责主机安全 -->
+							<xs:element name="MAC" type="zeroOne"/>
+							<!-- WATER指令 -->
+							<xs:element name="WATER" type="zeroOne"/>
+							<xs:any minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="AuxH">
+					<xs:annotation>
+						<xs:documentation>auxilary heating group</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<!-- LHCD指令 -->
+							<xs:element name="LHCD" type="zeroOne"/>
+							<!-- ECRH指令 -->
+							<xs:element name="ECRH" type="zeroOne"/>
+							<!-- NBI指令  -->
+							<xs:element name="NBI" type="zeroOne"/>
+							<xs:any minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="DAS">
+					<xs:annotation>
+						<xs:documentation>data acquisition system group</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<!-- RCIP 等离子体电流RC滤波参数 -->
+							<xs:element name="RCIP">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCDH 水平位移RC滤波参数 -->
+							<xs:element name="RCDH">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCDV 垂直位移RC滤波参数 -->
+							<xs:element name="RCDV">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCNE 密度RC滤波参数 -->
+							<xs:element name="RCNE">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCV1 发电机发电电压RC滤波参数 -->
+							<xs:element name="RCV1">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCV2 发电机发电电压RC滤波参数 -->
+							<xs:element name="RCV2">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCV3 发电机发电电压RC滤波参数 -->
+							<xs:element name="RCV3">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCV4 发电机发电电压RC滤波参数 -->
+							<xs:element name="RCV4">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCPF1U 线圈电流RC滤波参数 -->
+							<xs:element name="RCPF1U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCPF1L 线圈电流RC滤波参数 -->
+							<xs:element name="RCPF1L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCPF2U 线圈电流RC滤波参数 -->
+							<xs:element name="RCPF2U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCPF2L 线圈电流RC滤波参数 -->
+							<xs:element name="RCPF2L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCPF3U 线圈电流RC滤波参数 -->
+							<xs:element name="RCPF3U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCPF3L 线圈电流RC滤波参数 -->
+							<xs:element name="RCPF3L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCPF4U 线圈电流RC滤波参数 -->
+							<xs:element name="RCPF4U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCPF4L 线圈电流RC滤波参数 -->
+							<xs:element name="RCPF4L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCPF5U 线圈电流RC滤波参数 -->
+							<xs:element name="RCPF5U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCPF5L 线圈电流RC滤波参数 -->
+							<xs:element name="RCPF5L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCPF6U 线圈电流RC滤波参数 -->
+							<xs:element name="RCPF6U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCPF6L 线圈电流RC滤波参数 -->
+							<xs:element name="RCPF6L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCPF7U 线圈电流RC滤波参数 -->
+							<xs:element name="RCPF7U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCPF7L 线圈电流RC滤波参数 -->
+							<xs:element name="RCPF7L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCPF8U 线圈电流RC滤波参数 -->
+							<xs:element name="RCPF8U">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- RCPF8L 线圈电流RC滤波参数 -->
+							<xs:element name="RCPF8L">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0.01"/>
+										<xs:maxInclusive value="0.1"/>
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:any minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Other">
+					<xs:annotation>
+						<xs:documentation>other parameters</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:any minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

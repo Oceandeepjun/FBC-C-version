@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="gb2312"?>
+<!--  HL2A DPF file   -->
+<!--  swip 106, 2012/06/25   -->
+<?xml-stylesheet type="text/xsl" href="2000DPF.xsl"?>
+<DPF_file>
+<version>2.0</version>
+<operator>songx</operator>
+<shotnum>20000</shotnum>
+    <CC Name="central control group">
+        <FB Comment="反馈指令 0,1">0</FB>
+        <FBMode  Comment="反馈模式 0,1">0</FBMode>
+        <CtrlMode Comment="等离子体控制模式  0=RZIP， 1=isoFlux, 2=Gap">0</CtrlMode>
+        <IPmax Comment="等离子体电流最大值 0-1200 kA">0</IPmax>
+        <Tflattop Comment="等离子体电流平顶长度 0-5000ms">0</Tflattop>
+        <FBStart Comment="反馈控制系统中IP等曲线的反馈起始时刻 0-100ms">0</FBStart>
+    </CC>
+    <MG>
+        <MG1  Comment="1#电机指令 0,1">1</MG1>
+        <MG2  Comment="2#电机指令 0,1">1</MG2>
+        <MG3  Comment="3#电机指令 0,1">1</MG3>
+        <MG4  Comment="4#电机指令 0,1">1</MG4>
+        <FBW1Start  Comment="W1反馈起始时刻(ms)-6000 - 5000">0</FBW1Start>
+        <FBW2Start  Comment="W1反馈起始时刻(ms)-6000 - 5000">0</FBW2Start>
+        <FBW3Start  Comment="W1反馈起始时刻(ms)-6000 - 5000">0</FBW3Start>
+        <FBW4Start  Comment="W1反馈起始时刻(ms)-6000 - 5000">0</FBW4Start>
+        <MaxdW1  Comment="W1电压最大修正量(V) 0 - 50">-0</MaxdW1>
+        <MaxdW2  Comment="W1电压最大修正量(V) 0 - 50">0</MaxdW2>
+        <MaxdW3  Comment="W1电压最大修正量(V) 0 - 50">0</MaxdW3>
+        <MaxdW4  Comment="W1电压最大修正量(V) 0 - 50">0</MaxdW4>
+    </MG>
+    <PS>
+        <TF  Comment="TF指令 0,1">1</TF>
+        <OH  Comment="Oh指令 0,1">1</OH>
+        <PF1U  Comment="PF1U指令 0,1">1</PF1U>
+        <PF1L  Comment="PF1L指令 0,1">1</PF1L>
+        <PF2U  Comment="PF2U指令 0,1">1</PF2U>
+        <PF2L  Comment="PF2L指令 0,1">1</PF2L>
+        <PF3U  Comment="PF3U指令 0,1">1</PF3U>
+        <PF3L  Comment="PF3L指令 0,1">1</PF3L>
+        <PF4U  Comment="PF4U指令 0,1">1</PF4U>
+        <PF4L  Comment="PF4L指令 0,1">1</PF4L>
+        <PF5U  Comment="PF5U指令 0,1">1</PF5U>
+        <PF5L  Comment="PF5L指令 0,1">1</PF5L>
+        <PF6U  Comment="PF6U指令 0,1">1</PF6U>
+        <PF6L  Comment="PF6L指令 0,1">1</PF6L>
+        <PF7U  Comment="PF7U指令 0,1">1</PF7U>
+        <PF7L  Comment="PF7L指令 0,1">1</PF7L>
+        <PF8U  Comment="PF8U指令 0,1">1</PF8U>
+        <PF8L  Comment="PF8L指令 0,1">1</PF8L>
+        <OHMode  Comment="欧姆场放电模式： 0=对称方式；1=非对称方式,正组逆变，无负组；2=正组当负组用，负组整流 0 -10">1</OHMode>
+        <MGMode  Comment="电机工作模式 0=1号机+2号机+3号机为纵场供电，4号机为极向场供电；  1=1号机+2号机为纵场供电，3号机为极向场供电 0 -10">1</MGMode>
+        <VPF  Comment="VPF 为极向场供电的发电机发电电压(V) 1000 - 3500">1000</VPF>
+        <VOH  Comment="VOH 欧姆电源线电压(V) 10 - 2000">10</VOH>
+        <VPF1U  Comment="PF1U电源线电压(V) 10 - 1000">10</VPF1U>
+        <VPF1L  Comment="PF1L电源线电压(V) 10 - 1000">10</VPF1L>
+        <VPF2U  Comment="PF2U电源线电压(V) 10 - 1000">10</VPF2U>
+        <VPF2L  Comment="PF2L电源线电压(V) 10 - 1000">10</VPF2L>
+        <VPF3U  Comment="PF3U电源线电压(V) 10 - 1000">10</VPF3U>
+        <VPF3L  Comment="PF3L电源线电压(V) 10 - 1000">10</VPF3L>
+        <VPF4U  Comment="PF4U电源线电压(V) 10 - 1000">10</VPF4U>
+        <VPF4L  Comment="PF4L电源线电压(V) 10 - 1000">10</VPF4L>
+        <VPF5U  Comment="PF5U电源线电压(V) 10 - 1000">10</VPF5U>
+        <VPF5L  Comment="PF5L电源线电压(V) 10 - 1000">10</VPF5L>
+        <VPF6U  Comment="PF6U电源线电压(V) 10 - 1000">10</VPF6U>
+        <VPF6L  Comment="PF6L电源线电压(V) 10 - 1000">10</VPF6L>
+        <VPF7U  Comment="PF7U电源线电压(V) 10 - 1000">10</VPF7U>
+        <VPF7L  Comment="PF7L电源线电压(V) 10 - 1000">10</VPF7L>
+        <VPF8U  Comment="PF8U电源线电压(V) 10 - 1000">10</VPF8U>
+        <VPF8L  Comment="PF8L电源线电压(V) 10 - 1000">10</VPF8L>
+        <MaxdUOH  Comment="VOH 欧姆电源电压最大修正量(V) 10 - 200">10</MaxdUOH>
+        <MaxdUPF1U  Comment="PF1U电源电压最大修正量(V) 10 - 100">10</MaxdUPF1U>
+        <MaxdUPF1L  Comment="PF1L电源电压最大修正量(V) 10 - 100">10</MaxdUPF1L>
+        <MaxdUPF2U  Comment="PF2U电源电压最大修正量(V) 10 - 100">10</MaxdUPF2U>
+        <MaxdUPF2L  Comment="PF2L电源电压最大修正量(V) 10 - 100 ">0</MaxdUPF2L>
+        <MaxdUPF3U  Comment="PF3U电源电压最大修正量(V) 10 - 100">10</MaxdUPF3U>
+        <MaxdUPF3L  Comment="PF3L电源电压最大修正量(V) 10 - 100">10</MaxdUPF3L>
+        <MaxdUPF4U  Comment="PF4U电源电压最大修正量(V) 10 - 100">10</MaxdUPF4U>
+        <MaxdUPF4L  Comment="PF4L电源电压最大修正量(V) 10 - 100">10</MaxdUPF4L>
+        <MaxdUPF5U  Comment="PF5U电源电压最大修正量(V) 10 - 100">10</MaxdUPF5U>
+        <MaxdUPF5L  Comment="PF5L电源电压最大修正量(V) 10 - 100">10</MaxdUPF5L>
+        <MaxdUPF6U  Comment="PF6U电源电压最大修正量(V) 10 - 100">10</MaxdUPF6U>
+        <MaxdUPF6L  Comment="PF6L电源电压最大修正量(V) 10 - 100">10</MaxdUPF6L>
+        <MaxdUPF7U  Comment="PF7U电源电压最大修正量(V) 10 - 100">10</MaxdUPF7U>
+        <MaxdUPF7L  Comment="PF7L电源电压最大修正量(V) 10 - 100">10</MaxdUPF7L>
+        <MaxdUPF8U  Comment="PF8U电源电压最大修正量(V) 10 - 100">10</MaxdUPF8U>
+        <MaxdUPF8L  Comment="PF8L电源电压最大修正量(V) 10 - 100">10</MaxdUPF8L>
+        <IOHmax  Comment="OH 欧姆线圈最大电流(kA) 10 - 200">10</IOHmax>
+        <IPF1Umax  Comment="PF1U线圈最大电流(kA) 10 - 200">10</IPF1Umax>
+        <IPF1Lmax  Comment="PF1L线圈最大电流(kA) 10 - 200">10</IPF1Lmax>
+        <IPF2Umax  Comment="PF2U线圈最大电流(kA) 10 - 200">10</IPF2Umax>
+        <IPF2Lmax  Comment="PF2L线圈最大电流(kA) 10 - 200">10</IPF2Lmax>
+        <IPF3Umax  Comment="PF3U线圈最大电流(kA) 10 - 200">10</IPF3Umax>
+        <IPF3Lmax  Comment="PF3L线圈最大电流(kA) 10 - 200">10</IPF3Lmax>
+        <IPF4Umax  Comment="PF4U线圈最大电流(kA) 10 - 200">10</IPF4Umax>
+        <IPF4Lmax  Comment="PF4L线圈最大电流(kA) 10 - 200">10</IPF4Lmax>
+        <IPF5Umax  Comment="PF5U线圈最大电流(kA) 10 - 200">10</IPF5Umax>
+        <IPF5Lmax  Comment="PF5L线圈最大电流(kA) 10 - 200">10</IPF5Lmax>
+        <IPF6Umax  Comment="PF6U线圈最大电流(kA) 10 - 200">10</IPF6Umax>
+        <IPF6Lmax  Comment="PF6L线圈最大电流(kA) 10 - 200">10</IPF6Lmax>
+        <IPF7Umax  Comment="PF7U线圈最大电流(kA) 10 - 200">10</IPF7Umax>
+        <IPF7Lmax  Comment="PF7L线圈最大电流(kA) 10 - 200">10</IPF7Lmax>
+        <IPF8Umax  Comment="PF8U线圈最大电流(kA) 10 - 200">10</IPF8Umax>
+        <IPF8Lmax  Comment="PF8L线圈最大电流(kA) 10 - 200">10</IPF8Lmax>
+    </PS>
+    <VAC>
+        <VAC  Comment="真空指令 0,1">1</VAC>
+        <PI  Comment="弹丸指令 0,1">0</PI>
+        <MBI  Comment="分子束指令 0,1">0</MBI>
+        <UneMaximum  Comment="UneMaximum 密度反馈输出的最高电压(V) 3.6- 4.6">3.6</UneMaximum>
+        <UneMinimum  Comment="UneMinimum 密度反馈输出的最低电压 2.6- 3.6">2.6</UneMinimum>
+        <neMaximum  Comment="neMaximum 密度变化最大值(e13 cm-3) 0.6- 1.0">0.6</neMaximum>
+        <neMinimum  Comment="neMinimum 密度变换最小值(e13 cm-3) 0.01- 0.1">0.01</neMinimum>
+        <NeFBMode  Comment=" NeFBMode 密度反馈控制模式 0-10">2</NeFBMode>
+        <TminDelayFB  Comment="TminDelayFB 密度反馈下一次送气最小等待时间(ms) 0 -10">10</TminDelayFB>
+        <smbiTminDelayFB  Comment="smbiTminDelayFB 密度反馈分子束下一次送气最小等待时间(ms) 0 -10">10</smbiTminDelayFB>
+        <!-- 密度测量错误时，密度反馈控制系统相关的送气参数  -->
+        <NrepFB  Comment="NrepFB 密度反馈控制系统送气的脉冲个数 0 - 1000">0</NrepFB>
+        <TdelayFB  Comment="TdelayFB 密度反馈控制系统送气时的延迟时间(ms) 0 - 1000">0</TdelayFB>
+        <TwidthFB  Comment="TwidthFB 密度反馈控制系统送气时的脉冲宽度(ms) 0-1000">60</TwidthFB>
+        <VheightFB  Comment="VheightFB 密度反馈控制系统送气的脉冲高度(ms) 0-1000">60</VheightFB>
+    </VAC>
+    <MAC>
+        <MAC  Comment="MAC指令 负责主机安全 0,1">1</MAC>
+        <WATER  Comment="水系统指令 0,1">1</WATER>
+    </MAC>
+    <AuxH>   
+        <LHCD  Comment="低混杂波指令 0,1">1</LHCD>
+        <ECRH  Comment="电子回旋指令 0,1">1</ECRH>
+        <NBI  Comment="中性束指令 0,1">1</NBI>
+    </AuxH>
+    <DAS>
+        <RCIP  Comment="RCIP 等离子体电流RC滤波参数 0.01-0.1">0.1</RCIP>
+        <RCDH  Comment="RCDH 水平位移RC滤波参数 0.01-0.1">0.1</RCDH>
+        <RCDV  Comment="RCDV 垂直位移RC滤波参数0.01-0.1">0.1</RCDV>
+        <RCNE  Comment="RCNE 密度RC滤波参数0.01-0.1">0.1</RCNE>
+        <RCV1  Comment="RCV1 发电机发电电压RC滤波参数0.01-0.1">0.1</RCV1>
+        <RCV2  Comment="RCV2 发电机发电电压RC滤波参数0.01-0.1">0.1</RCV2>
+        <RCV3  Comment="RCV3 发电机发电电压RC滤波参数0.01-0.1">0.1</RCV3>
+        <RCV4  Comment="RCV4 发电机发电电压RC滤波参数0.01-0.1">0.1</RCV4>
+        <RCPF1U  Comment="RCPF1U 线圈电流RC滤波参数0.01-0.1">0.1</RCPF1U>
+        <RCPF1L  Comment="RCPF1L 线圈电流RC滤波参数0.01-0.1">0.1</RCPF1L>
+        <RCPF2U  Comment="RCPF1U 线圈电流RC滤波参数0.01-0.1">0.1</RCPF2U>
+        <RCPF2L  Comment="RCPF1L 线圈电流RC滤波参数0.01-0.1">0.1</RCPF2L>
+        <RCPF3U  Comment="RCPF1U 线圈电流RC滤波参数0.01-0.1">0.1</RCPF3U>
+        <RCPF3L  Comment="RCPF1L 线圈电流RC滤波参数0.01-0.1">0.1</RCPF3L>
+        <RCPF4U  Comment="RCPF1U 线圈电流RC滤波参数0.01-0.1">0.1</RCPF4U>
+        <RCPF4L  Comment="RCPF1L 线圈电流RC滤波参数0.01-0.1">0.1</RCPF4L>
+        <RCPF5U  Comment="RCPF1U 线圈电流RC滤波参数0.01-0.1">0.1</RCPF5U>
+        <RCPF5L  Comment="RCPF1L 线圈电流RC滤波参数0.01-0.1">0.1</RCPF5L>
+        <RCPF6U  Comment="RCPF1U 线圈电流RC滤波参数0.01-0.1">0.1</RCPF6U>
+        <RCPF6L  Comment="RCPF1L 线圈电流RC滤波参数0.01-0.1">0.1</RCPF6L>
+        <RCPF7U  Comment="RCPF1U 线圈电流RC滤波参数0.01-0.1">0.1</RCPF7U>
+        <RCPF7L  Comment="RCPF1L 线圈电流RC滤波参数0.01-0.1">0.12</RCPF7L>
+        <RCPF8U  Comment="RCPF1U 线圈电流RC滤波参数0.01-0.1">0.1</RCPF8U>
+        <RCPF8L  Comment="RCPF1L 线圈电流RC滤波参数0.01-0.1">0.1</RCPF8L>
+        
+    </DAS>
+    <other>
+    </other>
+</DPF_file>
