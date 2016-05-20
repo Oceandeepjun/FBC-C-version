@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include "../headers/macros.h"
 #include "../headers/structs.h"
+/*----------For xmlreading------------*/
+#include <libxml/xmlmemory.h>
+#include <libxml/parser.h>
 
 /*rotate just 1 element for array*/
 void Rotate_1D_Array(float *array_name,unsigned int len,float elem){
@@ -34,14 +37,46 @@ vec_Node_t get_VEC_Node(vec_Curve_t vec_Curve, int subscript){
               }
 }
 
+//void ChildNodeFinder(xmlNodePtr nodePtr){
+//	if(nodePtr->children!=NULL){
+//		printf("name=%s\n",nodePtr->name);
+//		nodePtr=nodePtr->children;
+//		if(nodePtr->next!=NULL&&nodePtr->type==XML_TEXT_NODE){
+//			nodePtr=nodePtr->next;
+//			ChildNodeFinder(nodePtr);
+//		}
+//	}
+//	if(nodePtr->next!=NULL){
+//		nodePtr=nodePtr->next;
+//		ChildNodeFinder(nodePtr);
+//		printf("name=%s\n",nodePtr->name);
+//		}
+//		else
+//		 nodePtr=nodePtr->parent;
+//}
 
+void ChildNodeFinder(xmlNodePtr nodePtr) {
+	static int call_count=0;
+	int i=0;
+	if(nodePtr->type==XML_ELEMENT_NODE){
+		int i=call_count;
+		while(i-->0)
+		printf("  ");
+		printf("name=%s\n",nodePtr->name);
+		call_count++;
+	}
+	if(nodePtr->children!=NULL){
+		nodePtr=nodePtr->children;
+		ChildNodeFinder(nodePtr);
+		nodePtr=nodePtr->parent;
+		call_count--;
+	}
+	if(nodePtr->next!=NULL){
+		nodePtr=nodePtr->next;
+		ChildNodeFinder(nodePtr);
+	}
 
-
-
-
-
-
-
+}
 
 
 

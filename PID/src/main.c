@@ -118,64 +118,24 @@ int main()
 		}
 
 	/*----------------------display the vec nodes at position-------------------*/
+
 //	int position=1;
 //	int i = 0;
 //	for(i=0;i<vec_Curve_array[position].nodeNo;i++)
 //	printf("%8.1f %8.1f\n",vec_Curve_array[position].vec_Nodes[i].y,vec_Curve_array[position].vec_Nodes[i].x);
-	int position=1;
-	int i = 0;
-	for(i=0;i<vec_Curve_array[position].nodeNo;i++)
-	printf("%8.1f %8.1f\n",vec_Curve_array[position].vec_Nodes[i].y,vec_Curve_array[position].vec_Nodes[i].x);
-	free(vecdat_Buffer);
+//
+//	free(vecdat_Buffer);
 
 	xmlDocPtr doc;
 	xmlNodePtr cur;
-	if(!xmlFree) xmlMemGet(&xmlFree,&xmlMalloc,&xmlRealloc,NULL);//only for windows!
-
+	if(!xmlFree) xmlMemGet(&xmlFree,&xmlMalloc,&xmlRealloc,NULL);//only for windows platform!
 //	xmlKeepBlanksDefault(0);
 	doc = xmlParseFile("2MDPF-new.xml");
 	//doc = xmlParseFile("aa.xml");
 	cur = xmlDocGetRootElement(doc);
-	if (cur!=NULL)
-		printf("%s\n",cur->name);
-
-	if(cur->children!=NULL){
-		cur = cur->children;
-		printf("%s\n",cur->name);
-		xmlGet
-		}
-	else
-		printf("Have no children node!");
+	ChildNodeFinder(cur);
 
 
-
-//	printf("name=%s\n",cur->name);
-//
-//		if (cur->children!=NULL)
-//		cur = cur->children;
-//
-//	    while(cur != NULL) {
-//	        printf("  name=%s\n",cur->name);
-//	        if(cur->children==NULL&&cur->next!=NULL)
-//	        	cur = cur->next;
-//
-//	        else {
-//	        	cur = cur->children;
-//	        	while(cur!=NULL){
-//
-//	        		printf("    name=%s\n",cur->name);
-//	        		if(cur->next==NULL)
-//	        			break;
-//	        		cur=cur->next;
-//	        	}
-//	        	cur=cur->parent;
-//	        }
-//
-//	        if(cur->next!=NULL)
-//	        cur = cur->next;
-//	    }
-
-	xmlFree(cur);
 	xmlFreeDoc(doc);
 
     return 0;
