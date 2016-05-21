@@ -37,24 +37,6 @@ vec_Node_t get_VEC_Node(vec_Curve_t vec_Curve, int subscript){
               }
 }
 
-//void ChildNodeFinder(xmlNodePtr nodePtr){
-//	if(nodePtr->children!=NULL){
-//		printf("name=%s\n",nodePtr->name);
-//		nodePtr=nodePtr->children;
-//		if(nodePtr->next!=NULL&&nodePtr->type==XML_TEXT_NODE){
-//			nodePtr=nodePtr->next;
-//			ChildNodeFinder(nodePtr);
-//		}
-//	}
-//	if(nodePtr->next!=NULL){
-//		nodePtr=nodePtr->next;
-//		ChildNodeFinder(nodePtr);
-//		printf("name=%s\n",nodePtr->name);
-//		}
-//		else
-//		 nodePtr=nodePtr->parent;
-//}
-
 void ChildNodeFinder(xmlNodePtr nodePtr) {
 	static int call_count=0;
 	int i=0;
@@ -62,7 +44,10 @@ void ChildNodeFinder(xmlNodePtr nodePtr) {
 		int i=call_count;
 		while(i-->0)
 		printf("  ");
-		printf("name=%s\n",nodePtr->name);
+		if(xmlChildElementCount(nodePtr)==0)
+			printf("name=%s,content=%s\n",nodePtr->name,xmlNodeGetContent(nodePtr));
+		else
+			printf("name=%s\n",nodePtr->name);
 		call_count++;
 	}
 	if(nodePtr->children!=NULL){
@@ -74,6 +59,7 @@ void ChildNodeFinder(xmlNodePtr nodePtr) {
 	if(nodePtr->next!=NULL){
 		nodePtr=nodePtr->next;
 		ChildNodeFinder(nodePtr);
+
 	}
 
 }
