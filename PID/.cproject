@@ -32,7 +32,6 @@
 									<listOptionValue builtIn="false" value="&quot;K:\FBC-C-Version\libxslt-1.1.26.win32\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;K:\FBC-C-Version\zlib-1.2.5.win32\zlib-1.2.5\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;K:\FBC-C-Version\iconv-1.9.2.win32\iconv-1.9.2.win32\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\Program Files\GnuWin32\include&quot;"/>
 								</option>
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.1416528390" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.1737519946" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
@@ -65,7 +64,6 @@
 									<listOptionValue builtIn="false" value="&quot;C:\Windows\System32&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;K:\FBC-C-Version\zlib-1.2.5.win32\zlib-1.2.5\lib&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;K:\FBC-C-Version\iconv-1.9.2.win32\iconv-1.9.2.win32\lib&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\Program Files\GnuWin32\lib&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.267146643" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>

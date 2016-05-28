@@ -25,16 +25,16 @@ int main()
     printf("%d\n",c[0][3]);
 	//-------------------Rotate_1D_Array Test--------------
     float a[3]={2,5,6};
-    Rotate_1D_Array(a,3,8);
+    Rotate_1D_Array(a,8);
     unsigned int i=0;
     while(i<sizeof(a)/4)
         printf("%f\n",a[(++i)-1]);
         i=0;
-    Rotate_1D_Array(a,3,8);
+    Rotate_1D_Array(a,8);
     while(i<sizeof(a)/4)
         printf("%f\n",a[(++i)-1]);
         i=0;
-    Rotate_1D_Array(a,3,8);
+    Rotate_1D_Array(a,8);
     while(i<sizeof(a)/4)
         printf("%f\n",a[(++i)-1]);
     //---------------Global Test------------------
