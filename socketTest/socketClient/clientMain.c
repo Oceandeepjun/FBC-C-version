@@ -17,7 +17,7 @@ int main(){
 	WSADATA wsadata;
 
 	int err;
-	wVersionRequested = MAKEWORD(2,2);
+	wVersionRequested = MAKEWORD(2,0);
 	err = WSAStartup(wVersionRequested,&wsadata);
 	/*--------------socket intialization check------------*/
 	if(0!=err){

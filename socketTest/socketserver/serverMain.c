@@ -10,13 +10,14 @@
 #include <winsock2.h>
 
 int main(){
+
 	WSADATA wsaDATA;
 	WORD sockVersion = MAKEWORD(2,0);
 	if(WSAStartup(sockVersion,&wsaDATA)!=0){
 		printf("Server sock initialization failed!\n");
 		return -1;
 	}
-
+/*---------------------------UDP Server--------------------------*/
 //	SOCKET serSock = socket(AF_INET,SOCK_DGRAM,0);
 //
 //	if(serSock == INVALID_SOCKET){
@@ -60,6 +61,7 @@ int main(){
 //	}
 //	closesocket(serSock);
 
+/*-------------------------------TCP Server---------------------------*/
 	SOCKET sockfdLocal,sockfdRemote;
 	SOCKADDR_IN localAddr,remoteAddr;
 
