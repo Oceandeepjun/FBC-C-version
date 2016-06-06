@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+
 /*---------For Xml option------------*/
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
@@ -11,6 +12,8 @@
 #include "../headers/structs.h"
 #include "../headers/macros.h"
 
+/*-------------socket-----------------*/
+#include <winsock2.h> //<sys/socket.h> <types.h> in Linux
 
 int main()
 {
