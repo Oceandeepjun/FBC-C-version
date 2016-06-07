@@ -103,6 +103,8 @@ int main(){
 		}
 	printf("Server process stopped!\n");
 	closesocket(sockfdLocal);
+
+
 	return 0;
 
 }

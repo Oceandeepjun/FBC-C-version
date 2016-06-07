@@ -23,14 +23,14 @@ int main(){
 	if(0!=err){
 	}
 	/*-------------------Version 2.0 check----------------*/
-	if(LOBYTE(wsadata.wVersion)!=2||HIBYTE(wsadata.wVersion)!=2){
+	if(LOBYTE(wsadata.wVersion)!=2||HIBYTE(wsadata.wVersion)!=0){
 		WSACleanup();
 		printf("Client Version check failed!\n");
 		return -1;
 	}
 
 
-//	/*----------------------UDP Client--------------------*/
+//	/*--------------------------------UDP Client----------------------------------------*/
 //	SOCKET  sock;     //usigined int
 //
 //	sock = socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP); 		/*Creating*/
@@ -84,64 +84,104 @@ int main(){
 //	closesocket(sock);
 
 /*-------------------------TCP Client----------------------------------*/
-	SOCKET sockfdClient;
-	SOCKADDR_IN destAddr;
-	sockfdClient = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
-	destAddr.sin_family = AF_INET;
-	destAddr.sin_port = htons(8000);
-	destAddr.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
-
-	if(connect(sockfdClient,(SOCKADDR *)&destAddr,sizeof(destAddr))<0){
-		printf("connect error!\n");
-		return -1;
-	}
-	int recvSIZE=5;
-	char cbuf[recvSIZE];
-	int clen,clensum;
-	char msg[255];
-
-	int timeout=5000;
-	setsockopt(sockfdClient,SOL_SOCKET,SO_RCVTIMEO,(const char *)&timeout,sizeof(timeout));
-
-	while((clen = recv(sockfdClient,cbuf,recvSIZE,0))>0){
-		clensum = clen;
-		cbuf[clen]='\0';
-		printf("Received data: %s",cbuf);
-		printf("errno: %d\n",errno);
-		while((clen = recv(sockfdClient,cbuf,recvSIZE,0))>0){
-			clensum+=clen;
-			cbuf[clen]='\0';
-			printf("%s",cbuf);
-		}
-		printf("\n");
-		printf("Last error: %d\nclensum:%d\n",WSAGetLastError(),clensum);
-		printf("Inout msg:");
-		scanf("%s",msg);
-		if(strcmp(msg,"q")){
-			send(sockfdClient,msg,strlen(msg),0);
-		}
-		else {
-				printf("Process stop!\n");
-				break;
-			}
-		}
-
-//	while(1){
+//	SOCKET sockfdClient;
+//	SOCKADDR_IN destAddr;
+//	sockfdClient = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+//	destAddr.sin_family = AF_INET;
+//	destAddr.sin_port = htons(8000);
+//	destAddr.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
+//
+//	if(connect(sockfdClient,(SOCKADDR *)&destAddr,sizeof(destAddr))<0){
+//		printf("connect error!\n");
+//		return -1;
+//	}
+//	int recvSIZE=5;
+//	char cbuf[recvSIZE];
+//	int clen,clensum;
+//	char msg[255];
+//
+//	int timeout=5000;
+//	setsockopt(sockfdClient,SOL_SOCKET,SO_RCVTIMEO,(const char *)&timeout,sizeof(timeout));
+//
+//	while((clen = recv(sockfdClient,cbuf,recvSIZE,0))>0){
+//		clensum = clen;
+//		cbuf[clen]='\0';
+//		printf("Received data: %s",cbuf);
+////		printf("errno: %d\n",errno);
+//		while((clen = recv(sockfdClient,cbuf,recvSIZE,0))>0){
+//			clensum+=clen;
+//			cbuf[clen]='\0';
+//			printf("%s",cbuf);
+//		}
+//		printf("\n");
+//		printf("Last error: %d\nclensum:%d\n",WSAGetLastError(),clensum);
 //		printf("Inout msg:");
 //		scanf("%s",msg);
 //		if(strcmp(msg,"q")){
 //			send(sockfdClient,msg,strlen(msg),0);
-//			clen = recv(sockfdClient,cbuf,255,0);
-//			cbuf[clen]='\0';
-//			printf("Received data: %s\n",cbuf);
 //		}
 //		else {
-//			printf("Process stop!\n");
-//			break;
+//				printf("Process stop!\n");
+//				break;
+//			}
 //		}
-//	}
+//
+//	printf("Last error: %d\n",WSAGetLastError());
+//	closesocket(sockfdClient);
 
-	printf("Last error: %d\n",WSAGetLastError());
-	closesocket(sockfdClient);
+/*-------------------------------FTP Client-------------------------------------*/
+	SOCKET ftpfd;
+	struct sockaddr_in ftpcaddr;
+	HOSTENT *hp;
+
+	memset(&ftpcaddr,0,sizeof(struct sockaddr_in));
+	ftpfd = socket(AF_INET,SOCK_STREAM,0);
+	hp = gethostbyname("WIN-S739H01RFKO");
+	ftpcaddr.sin_family = AF_INET;
+	ftpcaddr.sin_port = htons(21);
+	ftpcaddr.sin_addr.S_un.S_addr = inet_addr("192.168.9.235");
+
+//	printf("%s\n%s\n%s\n",hp->h_name,hp->h_addr_list[0],*(hp->h_aliases));
+//	memcpy(&ftpcaddr.sin_addr.S_un.S_addr,hp->h_addr_list[0],hp->h_length);
+//	char *str;
+//	str = inet_ntoa(ftpcaddr.sin_addr);
+//	printf("%s\n",str);
+	if(connect(ftpfd,(SOCKADDR *)&ftpcaddr,sizeof(ftpcaddr))<0){
+		printf("error\n");
+	}
+	else{
+	int BUFSIZE=100;
+	char rbuf[BUFSIZE];
+	char wbuf[BUFSIZE];
+	int rlen;
+
+		rlen = recv(ftpfd,rbuf,BUFSIZE,0);
+		printf("last error:%d  rlen:%d\n",WSAGetLastError(),rlen);
+		rbuf[rlen] = '\0';
+		printf("%s\n",rbuf);
+
+	char uname[] = "ftpuser";
+	char pswd[]  = "123456_aA";
+	sprintf(wbuf,"USER %s\r\n",uname);
+	send(ftpfd,wbuf,strlen(wbuf),0);
+
+		rlen = recv(ftpfd,rbuf,BUFSIZE,0);
+		printf("last error:%d\n",WSAGetLastError());
+		rbuf[rlen] = '\0';
+		printf("%s\n",rbuf);
+
+	sprintf(wbuf,"PASS %s\r\n",pswd);
+	send(ftpfd,wbuf,strlen(wbuf),0);
+
+		rlen = recv(ftpfd,rbuf,BUFSIZE,0);
+		printf("last error:%d\n",WSAGetLastError());
+		rbuf[rlen] = '\0';
+		printf("%s\n",rbuf);
+	}
+
+
+
+
+
 	return 0;
 }
