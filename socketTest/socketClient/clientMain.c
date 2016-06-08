@@ -12,6 +12,9 @@
 #include <winsock2.h>
 #include <errno.h>
 typedef enum{ true,false}bool;
+
+void printReturnInfo(SOCKET sckfd,char *buf, int bufSize);
+
 int main(){
 	WORD wVersionRequested;
 	WSADATA wsadata;
@@ -130,13 +133,13 @@ int main(){
 //	closesocket(sockfdClient);
 
 /*-------------------------------FTP Client-------------------------------------*/
-	SOCKET ftpfd;
+	SOCKET ftpfd,rftpfd;
 	struct sockaddr_in ftpcaddr;
-	HOSTENT *hp;
+//	HOSTENT *hp;
 
 	memset(&ftpcaddr,0,sizeof(struct sockaddr_in));
 	ftpfd = socket(AF_INET,SOCK_STREAM,0);
-	hp = gethostbyname("WIN-S739H01RFKO");
+//	hp = gethostbyname("WIN-S739H01RFKO");
 	ftpcaddr.sin_family = AF_INET;
 	ftpcaddr.sin_port = htons(21);
 	ftpcaddr.sin_addr.S_un.S_addr = inet_addr("192.168.9.235");
@@ -148,40 +151,79 @@ int main(){
 //	printf("%s\n",str);
 	if(connect(ftpfd,(SOCKADDR *)&ftpcaddr,sizeof(ftpcaddr))<0){
 		printf("error\n");
+		return -1;
 	}
-	else{
+
 	int BUFSIZE=100;
 	char rbuf[BUFSIZE];
 	char wbuf[BUFSIZE];
-	int rlen;
-
-		rlen = recv(ftpfd,rbuf,BUFSIZE,0);
-		printf("last error:%d  rlen:%d\n",WSAGetLastError(),rlen);
-		rbuf[rlen] = '\0';
-		printf("%s\n",rbuf);
+	printReturnInfo(ftpfd,rbuf,BUFSIZE);
 
 	char uname[] = "ftpuser";
 	char pswd[]  = "123456_aA";
-	sprintf(wbuf,"USER %s\r\n",uname);
+
+	sprintf(wbuf,"USER %s\r\n",uname);			/*USER send the username*/
 	send(ftpfd,wbuf,strlen(wbuf),0);
+	printReturnInfo(ftpfd,rbuf,BUFSIZE);
 
-		rlen = recv(ftpfd,rbuf,BUFSIZE,0);
-		printf("last error:%d\n",WSAGetLastError());
-		rbuf[rlen] = '\0';
-		printf("%s\n",rbuf);
-
-	sprintf(wbuf,"PASS %s\r\n",pswd);
+	sprintf(wbuf,"PASS %s\r\n",pswd);			/*PASS send the password*/
 	send(ftpfd,wbuf,strlen(wbuf),0);
+	printReturnInfo(ftpfd,rbuf,BUFSIZE);
 
-		rlen = recv(ftpfd,rbuf,BUFSIZE,0);
-		printf("last error:%d\n",WSAGetLastError());
-		rbuf[rlen] = '\0';
-		printf("%s\n",rbuf);
+	sprintf(wbuf,"PASV\r\n");					/*PASV set to passive mode*/
+	send(ftpfd,wbuf,strlen(wbuf),0);
+	printReturnInfo(ftpfd,rbuf,BUFSIZE);
+	int ipaddr[6];
+	sscanf(rbuf,"%*[^(](%d,%d,%d,%d,%d,%d)",ipaddr,ipaddr+1,ipaddr+2,ipaddr+3,ipaddr+4,ipaddr+5);
+//	printf("%d.%d.%d.%d.%d\n",ipaddr[0],ipaddr[2],ipaddr[3],ipaddr[4],ipaddr[5]);
+
+	u_short portToRead = ipaddr[4]*256+ipaddr[5];
+	ftpcaddr.sin_port = htons(portToRead);
+	rftpfd = socket(AF_INET,SOCK_STREAM,0);
+
+	if(connect(rftpfd,(SOCKADDR *)&ftpcaddr,sizeof(ftpcaddr))<0){		/*connect to the data stream socket*/
+		 printf("Data stream connection failed!\n");
+		 return -1;
 	}
+	sprintf(wbuf,"CWD %s\r\n","test");
+	send(ftpfd,wbuf,strlen(wbuf),0);
+	printReturnInfo(ftpfd,rbuf,BUFSIZE);
 
+	sprintf(wbuf,"SIZE %s\r\n","ftp.txt");
+	send(ftpfd,wbuf,strlen(wbuf),0);
+	printReturnInfo(ftpfd,rbuf,BUFSIZE);
 
+	sprintf(wbuf,"RETR %s\r\n","ftp.txt");
+	send(ftpfd,wbuf,strlen(wbuf),0);
+	printReturnInfo(ftpfd,rbuf,BUFSIZE);
 
+	FILE *fp = fopen("ftp.txt","wt+");
 
+	int dataLen;
+	int i=0;
+	while((dataLen = recv(rftpfd,rbuf,BUFSIZE,0))>0){
+		i++;
+		rbuf[dataLen]='\0';
+		fputs(rbuf,fp);
+	}
+	printf("i=%d\n",i);
+	fclose(fp);
+	closesocket(rftpfd);
+	printReturnInfo(ftpfd,rbuf,BUFSIZE);
+
+	sprintf(wbuf,"QUIT\r\n");
+	send(ftpfd,wbuf,strlen(wbuf),0);
+	printReturnInfo(ftpfd,rbuf,BUFSIZE);
+	closesocket(ftpfd);
 
 	return 0;
+
+}
+
+void printReturnInfo(SOCKET sckfd,char *buf, int bufSize){
+	int rlen;
+	rlen = recv(sckfd,buf,bufSize,0);
+	printf("last error:%d\n",WSAGetLastError());
+	buf[rlen] = '\0';
+	printf("%s\n",buf);
 }
