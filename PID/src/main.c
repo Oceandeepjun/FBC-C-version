@@ -75,7 +75,6 @@ int main()
 		memcpy(fv,vecinf_Buffer+((count)*VECINF_STRUCT_SIZE+10),12);
 		memcpy(sv,vecinf_Buffer+((count)*VECINF_STRUCT_SIZE+2),8);
 		memcpy(un,vecinf_Buffer+((count)*VECINF_STRUCT_SIZE+22),2);
-
 		vecinf_Array[count].Chname[0]=cn[0];
 		vecinf_Array[count].Chname[1]=cn[1];
 		vecinf_Array[count].Chname[2]='\0';
