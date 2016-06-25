@@ -1,7 +1,9 @@
 #ifndef FUNCTION_H_INCLUDED
 #define FUNCTION_H_INCLUDED
 #include "structs.h"
-
+//#include "dpf2m.h"
+//#include "vec2m.h"
+//#include "cc2m.h"
 
 void Rotate_1D_Array(float *array_name,float elem);
 vec_Node_t get_VEC_Node(vec_Curve_t vec_Curve, int subscript);
@@ -15,7 +17,6 @@ float pid_Calculator(vec_Curve_t pid_K, vec_Curve_t pid_J, vec_Curve_t pid_D,
  *Defined by Zhang
  *
  * */
-
 void pscSysInitial(PowerSupplyAndCoilSystem_t *pscSys, int pidOption);
 void ctrlSysInitial(freedBackControl_t *);
 void rzfluxIndxSet(freedBackControl_t *ctrlSys, int, int, int, int);
@@ -30,14 +31,14 @@ float IncrementPidCal(incrementPidController_t *);
 float RcFilter(rcFilter2m_t *f);
 int	cycleCounterToIndex(int );
 int	indexToCycleCounter(int );
-void pscCtrlParameterInitial(PowerSupplyAndCoils_t *, int);
+void pscCtrlParameterInitial(PowerSupplyAndCoils_type *, int);
 void unlockPscSysCheck(PowerSupplyAndCoilSystem_t *);
-void unlockPs(PowerSupplyAndCoils_t *, int);
+void unlockPs(PowerSupplyAndCoils_type *, int);
 
 void lockPscSysCheck(PowerSupplyAndCoilSystem_t *);
 void PsOperationStatusCheck(PowerSupplyAndCoilSystem_t *);
 
-void lockPs( PowerSupplyAndCoils_t *, int);   /*-------------------------------------*/
+void lockPs( PowerSupplyAndCoils_type *, int);   /*-------------------------------------*/
 
 void plasmalessDischarge(PowerSupplyAndCoilSystem_t *, freedBackControl_t *);
 void firstPlasmaDischarge(PowerSupplyAndCoilSystem_t *, freedBackControl_t *, bool);
@@ -61,6 +62,9 @@ void calculatePsCtrlAngle(PowerSupplyAndCoilSystem_t *, freedBackControl_t *, bo
 void sendCtrlAngleToPs(int, powerSupplyCtrlCmd_t *);
 
 void isoFluxControl(PowerSupplyAndCoilSystem_t *, freedBackControl_t *);
+
+
+
 
 
 #endif // FUNCTION_H_INCLUDED

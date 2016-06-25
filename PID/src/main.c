@@ -33,7 +33,7 @@
  *
  * */
 float GAcqData[ACQ_COUNT];
-PowerSupplyAndCoils_t			psPf2m[PSC_COUNT];
+PowerSupplyAndCoils_type	psPf2m[PSC_COUNT];
 PowerSupplyAndCoilSystem_t	pscSys;
 freedBackControl_t				ctrlSys;
 
@@ -167,125 +167,6 @@ int main()
 	ChildNodeFinder(cur);
 	xmlFreeNode(cur);
 	xmlFreeDoc(doc);
-
-/*
- *
- *  Main Starts
- *  Use zhang main
- *
- * */
-	/* vec2m variables */
-		//dataAcqChannel_t				dataAcqChannel2m;
-		//ccTargetWaveForm_t			ccTargetWaveForm2m;
-		//psVotageControl_t				pidcontroll2m;
-
-		/* dpf2m vairables */
-		DpfCentralCtrl_t				dpfCentralCtrl2m;
-		//DpfMotorGenerator_t			dpfMotorGenerator2m;
-		//DpfPowerSupply_t				dpfPowerSupply2m;
-		//DpfVacuum_t					dpfVacuum2m;
-		//DpfMachine_t					dpfMachine2m;
-		//DpfAuxHeating_t				dpfAuxHeating2m;
-		//DpfDasRCfilter_t				dpfDasRCfilter2m;
-
-		/* hl-2m poloidal power supply and coils variable sets */
-
-
-
-		int				id, cycleCounter;		/* 循环计数器，以控制周期为单位*/
-
-		int				discharePhase;		/* 放电阶段  */
-
-		bool				forceNoBFCntrl;		/* 强制不返馈 */
-
-		/* read 2mdpf.xml file */
-		if (!dpfCentralCtrl2m.feedBackCmd) return 0;		/* 反馈不投入 */
-		/* read vec 文件并插值 */
-
-		for (id=PSC_CS; id<PSC_COUNT; id++)
-			{
-				psPf2m[id].id = id;
-				pscSys.psAndcoils2m[id] = &(psPf2m[id]);
-			}
-
-		pscSys.controlPeriodTime		= 1.0;	/* (ms) */
-
-
-		/* pid(iPF_acq-iPF_target), pid option : CNTRL_OPTION_PID, CNTRL_OPTION_P, CNTRL_OPTION_PI, CNTRL_OPTION_PD */
-		pscSysInitial(&pscSys, CNTRL_OPTION_PID);
-		rzfluxIndxSet(&ctrlSys, FLUXLOOP_IN_UPPER, FLUXLOOP_IN_LOWER, FLUXLOOP_OUT_UPPER, FLUXLOOP_OUT_LOWER);
-		ctrlSysInitial(&ctrlSys);
-		pidOpotionSet(&ctrlSys, SET_CTRLLER_IP, CNTRL_OPTION_PID);
-		pidOpotionSet(&ctrlSys, SET_CTRLLER_R, CNTRL_OPTION_PID);
-		pidOpotionSet(&ctrlSys, SET_CTRLLER_Z, CNTRL_OPTION_PID);
-		pidOpotionSet(&ctrlSys, SET_CTRLLER_ISOFLUX, CNTRL_OPTION_PID);
-
-		/* read 2mdpf.xml file */
-		/* read 2mvec file */
-		/* read ctrlSys.MutualMatrix */
-
-		ctrlSys.ctrlMode = dpfCentralCtrl2m.CtrlMode;
-		/*ctrlSys.doFreedBackCntrl = dpfCentralCtrl2m.feedBackMode;*/
-		/*  反馈与时序、逻辑的关系*/
-		/*  cycleCounter  */
-
-		//if (cycleCounter == dpfCentralCtrl2m.DischargeStartStep)		/* Discharge Start */
-		do {	/* 实时程序将修改这种循环结构*/
-				/* get current time from TSC ??????????  linux MRG */
-
-				pscSys.cycleCount = cycleCounter;
-				pscSys.cycleIndx = cycleCounterToIndex(cycleCounter);
-				/* get acq data & filter for acq_data ??????????????????????????????? */
-				getAcqData(&(ctrlSys.mDiag.acqData));
-				acqDataProcess(&pscSys, &ctrlSys);
-				if (ctrlSys.disFail.disrupTimes >= DISRUPT_MAX_TIMES) ctrlSys.disFail.dischareFailure = 1;
-				if (ctrlSys.disFail.dischareFailure)
-					{
-						dischareFailureHandle(&pscSys, &ctrlSys);
-					}
-				else
-					{
-						switch (dpfCentralCtrl2m.OperationMode)
-							{
-							case FB_NO_PLASMA :
-								/* plasmaless discharge, test & scaling */
-								plasmalessDischarge(&pscSys, &ctrlSys);
-								break;
-
-							case FIRST_PLASMA :
-								/* 所有电源只有负组工作*/
-								ctrlSys.ctrlMode = CTRL_RZIP;
-								//if (cycleCounter < 10 )
-								if (ctrlSys.mDiag.ipAcq.data[pscSys.cycleIndx] < 5.0 )
-									{
-										forceNoBFCntrl = 1;
-									}
-								else if (cycleCounter < dpfCentralCtrl2m.FBStartTime)
-									{
-										forceNoBFCntrl = dpfCentralCtrl2m.feedBackMode;
-										ctrlSys.doFreedBackCntrl = 0;
-									}
-								else
-									{
-										forceNoBFCntrl = dpfCentralCtrl2m.feedBackMode;
-										ctrlSys.doFreedBackCntrl = 1;
-									}
-									firstPlasmaDischarge(&pscSys, &ctrlSys, forceNoBFCntrl);
-
-								break;
-
-							case NORMAL_PLASMA :
-							default :
-								discharePhase = getDischarePhase(&pscSys, &ctrlSys, &dpfCentralCtrl2m);
-								normalPlasmaDischarge(&pscSys, &ctrlSys, discharePhase);
-							}
-						/* check 一个控制周期的剩余时间  */
-						cycleCounter++;
-					}
-			}
-		while(cycleCounter < dpfCentralCtrl2m.DischargeEndStep);
-
-
 
     return 0;
 

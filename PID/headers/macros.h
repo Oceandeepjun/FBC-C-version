@@ -14,10 +14,10 @@
  *
  */
 
-#define		FLUXLOOP_IN_UPPER				1		/* */
-#define		FLUXLOOP_IN_LOWER				2
-#define		FLUXLOOP_OUT_UPPER				3
-#define		FLUXLOOP_OUT_LOWER				4
+#define	FLUXLOOP_IN_UPPER				1		/* */
+#define	FLUXLOOP_IN_LOWER				2
+#define	FLUXLOOP_OUT_UPPER				3
+#define	FLUXLOOP_OUT_LOWER				4
 
 #define	DISRUPTION_OCC			-10.0			/* -10 kA/ms, if dIp/dt < DISRUPTION_DIP */
 #define	IP_TARGET_FACTOR			0.6				/* if (ip_acq < IP_TARGET_FACTOR*ip_target) dischareFailure = 1*/
