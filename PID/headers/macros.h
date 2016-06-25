@@ -1,6 +1,6 @@
 #ifndef MACROS_H_INCLUDED
 #define MACROS_H_INCLUDED
-
+#include <stdbool.h>
 /*---------macro definitions-------------*/
 
 #define CONTROL_PERIOD 1

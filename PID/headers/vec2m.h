@@ -1,13 +1,21 @@
-#ifndef VEC2M_H_INCLUDED
-#define VEC2M_H_INCLUDED
+/*
+ * vec2m.h
+ *
+ *  Created on: 2016年6月25日
+ *      Author: Ajun
+ */
+
+#ifndef HEADERS_VEC2M_H_
+#define HEADERS_VEC2M_H_
 #include "macros.h"
+
 typedef struct waveFormDescrption
 {
-	/* t[i]= -MAX_DISCHARGE_TIME/2+i*dt(=Ts), (i=0,...MAX_DISCHARGE_TIME-1) 
-	    i = MAX_DISCHARGE_TIME/2 + t 
+	/* t[i]= -MAX_DISCHARGE_TIME/2+i*dt(=Ts), (i=0,...MAX_DISCHARGE_TIME-1)
+	    i = MAX_DISCHARGE_TIME/2 + t
 	    t0=0 -> i = MAX_DISCHARGE_TIME/2 */
-	    
-	char			channelName[3];	
+
+	char			channelName[3];
 	float			data[MAX_DISCHARGE_TIME];
 	int			startIndx;			/* 开始时刻索引 t[Indx]= -MAX_DISCHARGE_TIME/2+Indx*dt    dt,control period */
 	int			endIndx;			/* 结束时刻索引 */
@@ -16,7 +24,7 @@ typedef struct waveFormDescrption
 }waveFormDescrption_t;
 
 typedef struct dataAcqChannel
-{	
+{
 	waveFormDescrption_t			fluxLoop[NUMBER_FLUX];	/* flux loop(V) */
 	waveFormDescrption_t			mProbe[NUMBER_PROBE];	/* magnetic probe(V) */
 	waveFormDescrption_t			ipf1u;					/* coil current of PF1U (kA) */
@@ -89,12 +97,12 @@ typedef struct ccTargetWaveForm
 
 	waveFormDescrption_t			vcs;						/* power supply votage of CS (V) */
 	waveFormDescrption_t			ics;						/* coil current of CS (kA) */
-	
+
 	waveFormDescrption_t			vmb;					/* 分子束送气脉冲电压 (mV) */
 	waveFormDescrption_t			vGP;					/* 送气脉冲电压 (mv) */
 	waveFormDescrption_t			z1;						/* 2#电机副励磁电源电压(V) */
 	waveFormDescrption_t			z2;						/* 2#电机主励磁电源电压(V) */
-	
+
 	waveFormDescrption_t			ip;						/* plasma current (kA) */
 	waveFormDescrption_t			ph;						/* plasma horizontal position (mm) */
 	waveFormDescrption_t			pv;						/* plasma vertical position (mm) */
@@ -132,7 +140,7 @@ typedef struct psVotageControll
 	pidController_t			pf8l;
 
 	pidController_t			cs;
-	
+
 	pidController_t			mG12Secondary;		/* 1#2#电机副励磁电压控制*/
 	pidController_t			mG12Primary;		/* 1#2#电机主励磁电压控制*/
 	pidController_t			mG3;				/* 3#电机励磁电压控制*/
@@ -145,4 +153,7 @@ typedef struct psVotageControll
 	pidController_t			mG2Primary;		/* 2#电机主励磁电压控制 */
 }psVotageControll_t;
 
-#endif //VEC_H_INCLUDED
+
+
+
+#endif /* HEADERS_VEC2M_H_ */

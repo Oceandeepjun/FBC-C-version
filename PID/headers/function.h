@@ -1,6 +1,8 @@
 #ifndef FUNCTION_H_INCLUDED
 #define FUNCTION_H_INCLUDED
 #include "structs.h"
+
+
 void Rotate_1D_Array(float *array_name,float elem);
 vec_Node_t get_VEC_Node(vec_Curve_t vec_Curve, int subscript);
 

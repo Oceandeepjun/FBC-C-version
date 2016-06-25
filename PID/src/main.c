@@ -16,9 +16,6 @@
 /*
  *  User headers
  */
-#include "../headers/dpf2m.h"
-#include "../headers/vec2m.h"
-#include "../headers/cc2m.h"
 #include "../headers/function.h"
 #include "../headers/structs.h"
 #include "../headers/macros.h"

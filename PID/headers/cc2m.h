@@ -1,11 +1,16 @@
-#ifndef CC2M_H_INCLUDED
-#define CC2M_H_INCLUDED
+/*
+ * cc2m.h
+ *
+ *  Created on: 2016Äê6ÔÂ25ÈÕ
+ *      Author: Ajun
+ */
+
+#ifndef HEADERS_CC2M_H_
+#define HEADERS_CC2M_H_
 #include "macros.h"
-#include <stdbool.h>
-#include "vec2m.h"
 enum PowerSupplyAdCoilsID
 {
-	PSC_CS				= 0,
+	PSC_CS	= 0,
 	PSC_PF1U,
 	PSC_PF1L,
 	PSC_PF2U,
@@ -305,8 +310,10 @@ typedef struct FlDispacementCal
 	float			dv;
 }FlDispacementCal_t;
 
-#endif //CC2M_H_INCLUDED
 
 
 
 
+
+
+#endif /* HEADERS_CC2M_H_ */
