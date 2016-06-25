@@ -1,7 +1,11 @@
-
+#ifndef CC2M_H_INCLUDED
+#define CC2M_H_INCLUDED
+#include "macros.h"
+#include <stdbool.h>
+#include "vec2m.h"
 enum PowerSupplyAdCoilsID
 {
-	PSC_CS	= 0,
+	PSC_CS				= 0,
 	PSC_PF1U,
 	PSC_PF1L,
 	PSC_PF2U,
@@ -115,11 +119,6 @@ enum ControllerPidOptionSet
 	SET_CTRLLER_Z,
 	SET_CTRLLER_ISOFLUX
 };
-
-#define	DISRUPTION_OCC			-10.0			/* -10 kA/ms, if dIp/dt < DISRUPTION_DIP */
-#define	IP_TARGET_FACTOR			0.6				/* if (ip_acq < IP_TARGET_FACTOR*ip_target) dischareFailure = 1*/
-#define	DISRUPT_MAX_TIMES			3 
-#define	ISO_FLUX_POINTS			8	
 
 /* struct. for HL-2M feed back control system */
 typedef struct PowerSupplyAndCoils
@@ -305,6 +304,8 @@ typedef struct FlDispacementCal
 	float			dh;
 	float			dv;
 }FlDispacementCal_t;
+
+#endif //CC2M_H_INCLUDED
 
 
 

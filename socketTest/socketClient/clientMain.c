@@ -11,7 +11,7 @@
 #include <string.h>
 #include <winsock2.h>
 #include <errno.h>
-typedef enum{ true,false}bool;
+#include <sys/types.h>
 
 void printReturnInfo(SOCKET sckfd,char *buf, int bufSize);
 
@@ -146,9 +146,9 @@ int main(){
 //
 ////	printf("%s\n%s\n%s\n",hp->h_name,hp->h_addr_list[0],*(hp->h_aliases));
 ////	memcpy(&ftpcaddr.sin_addr.S_un.S_addr,hp->h_addr_list[0],hp->h_length);
-////	char *str;
-////	str = inet_ntoa(ftpcaddr.sin_addr);
-////	printf("%s\n",str);
+//	char *str;
+//	str = inet_ntoa(ftpcaddr.sin_addr);
+//	printf("%s\n",str);
 //	if(connect(ftpfd,(SOCKADDR *)&ftpcaddr,sizeof(ftpcaddr))<0){
 //		printf("error\n");
 //		return -1;
@@ -218,6 +218,7 @@ int main(){
 
 	system("ftp -i -n -s:af.bat");
 
+
 	return 0;
 
 }
@@ -229,3 +230,4 @@ void printReturnInfo(SOCKET sckfd,char *buf, int bufSize){
 	buf[rlen] = '\0';
 	printf("%s\n",buf);
 }
+

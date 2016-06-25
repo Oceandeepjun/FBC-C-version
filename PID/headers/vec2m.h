@@ -1,9 +1,6 @@
-
-
-#define MAX_DISCHARGE_TIME                14000	/* discharge time -7000ms to 7000ms  */
-#define NUMBER_FLUX             			   40		/* number of flux loop  */
-#define NUMBER_PROBE             		  60		/* number of magnetic probe */
-
+#ifndef VEC2M_H_INCLUDED
+#define VEC2M_H_INCLUDED
+#include "macros.h"
 typedef struct waveFormDescrption
 {
 	/* t[i]= -MAX_DISCHARGE_TIME/2+i*dt(=Ts), (i=0,...MAX_DISCHARGE_TIME-1) 
@@ -148,3 +145,4 @@ typedef struct psVotageControll
 	pidController_t			mG2Primary;		/* 2#电机主励磁电压控制 */
 }psVotageControll_t;
 
+#endif //VEC_H_INCLUDED
