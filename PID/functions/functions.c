@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <string.h>
+#include <math.h>
 #include "../headers/macros.h"
 #include "../headers/structs.h"
 
@@ -21,6 +23,55 @@ void Rotate_1D_Array(float *array_name,float elem_insert){
         }
     array_name[0]=elem_insert;
 }
+
+void readVECInfFile(char filename[], vec_Inf_t vecinf_Array[], long filesize){
+		FILE* vecinfp=fopen(filename,"rb");
+		char* vecinf_Buffer=(char*)malloc(filesize);
+		fread(vecinf_Buffer,VECINF_STRUCT_SIZE,filesize/VECINF_STRUCT_SIZE,vecinfp);  	/*read vecinf into buffer*/
+		fclose(vecinfp);
+		int count;
+		char cn[2];
+		short sv[4];
+		float fv[3];
+		char un[2];
+		for(count=0;count<filesize/VECINF_STRUCT_SIZE;count++){            				/*move vecinf into buffered array*/
+			memcpy(cn,vecinf_Buffer+((count)*VECINF_STRUCT_SIZE+0),2);
+			memcpy(cn,vecinf_Buffer+((count)*VECINF_STRUCT_SIZE+0),2);   					/*must convert in mem!*/
+			memcpy(fv,vecinf_Buffer+((count)*VECINF_STRUCT_SIZE+10),12);
+			memcpy(sv,vecinf_Buffer+((count)*VECINF_STRUCT_SIZE+2),8);
+			memcpy(un,vecinf_Buffer+((count)*VECINF_STRUCT_SIZE+22),2);
+			vecinf_Array[count].Chname[0]=cn[0];
+			vecinf_Array[count].Chname[1]=cn[1];
+			vecinf_Array[count].Chname[2]='\0';
+			vecinf_Array[count].ChanNo=sv[0];
+			vecinf_Array[count].nodeNo=sv[1];
+			vecinf_Array[count].DataType=sv[2];
+			vecinf_Array[count].Address=sv[3];
+			vecinf_Array[count].XSumCheck=fv[0];
+			vecinf_Array[count].YSumCheck=fv[1];
+			vecinf_Array[count].Frequency=fv[2];
+			vecinf_Array[count].Unit[0]=un[0];
+			vecinf_Array[count].Unit[1]=un[1];
+			vecinf_Array[count].Unit[2]='\0';
+			free(vecinf_Buffer);
+		}
+	}
+
+vec_Node_t * readVECDataFile(char filename[], vec_Inf_t vecinf_Array[],vec_Curve_t vec_Curve_array[],long datfilesize,long inffilesize){
+		vec_Node_t *vecdat_Buffer=(vec_Node_t*)malloc(datfilesize);
+		FILE *vecdatp=fopen(filename,"rb");											/*read into vecdat buffer*/
+		fread(vecdat_Buffer,sizeof(vec_Node_t),datfilesize/sizeof(vec_Node_t),vecdatp);
+		fclose(vecdatp);
+
+		int curvenum=0;
+		int nodeNo_Sum=0;
+		for(curvenum=0;curvenum<inffilesize/VECINF_STRUCT_SIZE;curvenum++){
+			vec_Curve_array[curvenum].nodeNo=vecinf_Array[curvenum].nodeNo;
+			vec_Curve_array[curvenum].vec_Nodes=vecdat_Buffer+vecinf_Array[curvenum].Address;
+			nodeNo_Sum+=vecinf_Array[curvenum].nodeNo;
+			}
+		return vecdat_Buffer;        /* Must be freed out of the function*/
+	}
 
 /*get the x,y value of one vec node;*/
 VEC_NODE_TYPE get_VEC_Node(vec_Curve_t vec_Curve, int subscript){
@@ -49,7 +100,6 @@ VEC_NODE_TYPE get_VEC_Node(vec_Curve_t vec_Curve, int subscript){
 
 void ChildNodeFinder(xmlNodePtr nodePtr) {
 	static int call_count=0;
-	int i=0;
 	if(nodePtr->type==XML_ELEMENT_NODE){
 		int i=call_count;
 		while(i-->0)
@@ -269,7 +319,10 @@ void pidOpotionSet(freedBackControl_t * ctrlSys, int controller, int pidOpition)
 		}
 }
 
+void unlockPs(PowerSupplyAndCoils_type *ps, int sig)
+{
 
+}
 
 
 void unlockPscSysCheck(PowerSupplyAndCoilSystem_t *pscSys)
@@ -374,11 +427,6 @@ void PsOperationStatusCheck(PowerSupplyAndCoilSystem_t *pscSys)
 
 }
 
-void unlockPs(PowerSupplyAndCoils_type *ps, int sig)
-{
-
-}
-
 void lockPscSysCheck(PowerSupplyAndCoilSystem_t *pscSys)
 {
 	int						i, indx;
@@ -422,8 +470,6 @@ void lockPscSysCheck(PowerSupplyAndCoilSystem_t *pscSys)
 	}
 
 }
-
-
 
 void getAcqData(void  *acqDataAdress)
 {
@@ -514,318 +560,6 @@ void acqDataProcess(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrl
 
 }
 
-void plasmalessDischarge(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrlSys)
-{
-	int   i;
-	bool		forceNoBFCntrl;
-	int		idCircleCurrent;
-	PowerSupplyAndCoils_type  *p;
-
-	if (pscSys->readyPsCount > 0) unlockPscSysCheck(pscSys);
-
-	if (ctrlSys->doFreedBackCntrl)
-		{
-			/* PF coil current freed back control di->du */
-			currentfreedBackInit(pscSys);				/* set delta_di = 0 */
-			currentfreedBackControl(pscSys, ctrlSys);		/* delta_di = pid(i_acq-i_Target) */
-			votageCorrectCal(pscSys, ctrlSys);			/* du = M*di + Rdi, sumDu += du */
-			forceNoBFCntrl = 0;
-			calculatePsCtrlAngle(pscSys, ctrlSys, forceNoBFCntrl);	/* calclate control angle alpha */
-		}
-	else
-		{
-			forceNoBFCntrl = 1;
-			calculatePsCtrlAngle(pscSys, ctrlSys, forceNoBFCntrl);
-		}
-
-	PsOperationStatusCheck(pscSys);
-
-	if (pscSys->workingPsCount > 0) lockPscSysCheck(pscSys);
-}
-
-
-void firstPlasmaDischarge(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrlSys, bool forceNoBFCntrl)
-{
-
-	if (pscSys->readyPsCount > 0) unlockPscSysCheck(pscSys);
-	if (forceNoBFCntrl)
-		{
-			/*  during plasma breakdown or test dischare */
-			calculatePsCtrlAngle(pscSys, ctrlSys, forceNoBFCntrl);
-		}
-	else if (ctrlSys->doFreedBackCntrl)
-		{
-			/* Ip < 50 kA */
-			/* PF coil current freed back control di->du */
-			currentfreedBackInit(pscSys);				/* set delta_di = 0 */
-			currentfreedBackControl(pscSys, ctrlSys);		/* delta_di = pid(i_acq-i_Target) */
-			votageCorrectCal(pscSys, ctrlSys);			/* du = M*di/dt + Rdi, sumDu += du */
-			calculatePsCtrlAngle(pscSys, ctrlSys, 0);			/* calclate control angle alpha */
-		}
-	else
-		{
-			currentfreedBackInit(pscSys);				/* set delta_di = 0 */
-			horizontaPositionControl(pscSys, ctrlSys);
-			verticalPositionControl(pscSys, ctrlSys);
-			plasCurrentControl(pscSys, ctrlSys);
-			currentfreedBackControl(pscSys, ctrlSys);		/* delta_di = pid(i_acq-i_Target) */
-			votageCorrectCal(pscSys, ctrlSys);			/* du = M*di + Rdi/dt, sumDu += du */
-			calculatePsCtrlAngle(pscSys, ctrlSys, 0);			/* calclate control angle alpha */
-		}
-
-	if (pscSys->workingPsCount > 0) lockPscSysCheck(pscSys);
-}
-
-void normalPlasmaDischarge(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrlSys, int discharePhase)
-{
-	bool		forceNoBFCntrl;
-
-	switch (discharePhase)
-		{
-		case NDP_CS_CHAREG :
-			if (pscSys->readyPsCount > 0) unlockPscSysCheck(pscSys);
-
-			if (ctrlSys->doFreedBackCntrl)
-				{
-					/* PF coil current freed back control di->du */
-					currentfreedBackInit(pscSys);				/* set delta_di = 0 */
-					currentfreedBackControl(pscSys, ctrlSys);		/* delta_di = pid(i_acq-i_Target) */
-					votageCorrectCal(pscSys, ctrlSys);			/* du = M*di/dt + Rdi, sumDu += du */
-					forceNoBFCntrl = 0;
-					calculatePsCtrlAngle(pscSys, ctrlSys, forceNoBFCntrl);	/* calclate control angle alpha */
-				}
-			else
-				{
-					forceNoBFCntrl = 1;
-					calculatePsCtrlAngle(pscSys, ctrlSys, forceNoBFCntrl);
-				}
-
-			break;
-
-		case NDP_CS_INVERSE :
-
-			forceNoBFCntrl = 1;
-			calculatePsCtrlAngle(pscSys, ctrlSys, forceNoBFCntrl);
-			break;
-
-		case NDP_IP_RAMP_UP_NO_FB :
-			ctrlSys->disFail.disrupt;
-
-			currentfreedBackInit(pscSys);				/* set delta_di = 0 */
-			currentfreedBackControl(pscSys, ctrlSys);		/* delta_di = pid(i_acq-i_Target) */
-			votageCorrectCal(pscSys, ctrlSys);			/* du = M*di + Rdi/dt, sumDu += du */
-			calculatePsCtrlAngle(pscSys, ctrlSys, 0);			/* calclate control angle alpha */
-			break;
-
-		case NDP_IP_RAMP_UP_FB :
-		case NDP_IP_FLATTOP_RAMP_DOWN:
-			currentfreedBackInit(pscSys);				/* set delta_di = 0 */
-			switch (ctrlSys->ctrlMode)
-			{
-				case CTRL_ISOFLUX :
-					isoFluxControl(pscSys, ctrlSys);
-					break;
-
-				case CTRL_GAP :
-					break;
-
-				case CTRL_RZIP :
-				default :
-					horizontaPositionControl(pscSys, ctrlSys);
-					verticalPositionControl(pscSys, ctrlSys);
-			}
-			plasCurrentControl(pscSys, ctrlSys);
-			currentfreedBackControl(pscSys, ctrlSys);		/* delta_di = pid(i_acq-i_Target) */
-			votageCorrectCal(pscSys, ctrlSys);			/* du = M*di + Rdi, sumDu += du */
-			calculatePsCtrlAngle(pscSys, ctrlSys, 0);			/* calclate control angle alpha */
-			if (pscSys->workingPsCount > 0) lockPscSysCheck(pscSys);
-			break;
-
-		default:
-			break;
-
-		PsOperationStatusCheck(pscSys);
-
-		}
-
-}
-
-void dischareFailureHandle(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrlSys)
-{
-	int						i,indx;
-	PowerSupplyAndCoils_type		*p;
-	powerSupplyCtrlCmd_t 		psCmd;
-	float						u,ud;
-	float pi  = 3.1415926;
-
-	indx = pscSys->cycleIndx;
-	for (i=PSC_CS; i<PSC_COUNT; i++)
-	{
-		p = pscSys->workingPsIdAddress[i];
-		if (p != NULL)
-		{
-			switch (p->operationStatus)
-			{
-				case PS_POS_FULL_OPERATION :
-				case PS_POS_PART_OPERATION :
-					if (p->iAcq.data[pscSys->cycleIndx] > 0.0)
-						{
-							ud = p->vTarget.data[indx];
-							u = ud/(1.35*p->u2l*pscSys->VotageMGforPF/3000.0);
-							psCmd.cmdType = CMD_PS_POS;
-							psCmd.alphaPos = acos(u);
-							sendCtrlAngleToPs(p->id, &psCmd);
-						}
-					else
-						{
-							lockPs(p, SIG_PS_LOCK_POS);	/* close PS positive set  */
-							pscSys->workingPsIdAddress[p->id] = NULL;
-							pscSys->workingPsCount -= 1;
-						}
-					break;
-
-				case PS_CIRCLE_CURRENT_OPERATION :
-							lockPs(p, SIG_PS_LOCK_POS_NEG);
-							pscSys->workingPsIdAddress[p->id] = NULL;
-							pscSys->workingPsCount -= 1;
-							break;
-
-				case PS_NEG_PART_OPERATION :
-							lockPs(p, SIG_PS_LOCK_POS_NEG);
-							pscSys->workingPsIdAddress[p->id] = NULL;
-							pscSys->workingPsCount -= 1;
-					break;
-
-				case PS_NEG_FULL_OPERATION :
-					if (p->iAcq.data[pscSys->cycleIndx] > 0.0)
-						{
-							ud = p->vTarget.data[indx];
-							u = ud/(1.35*p->u2l*pscSys->VotageMGforPF/3000.0);
-							psCmd.cmdType = CMD_PS_NEG;
-							psCmd.alphaNeg = acos(-u);
-							sendCtrlAngleToPs(p->id, &psCmd);
-						}
-					else
-						{
-							lockPs(p, SIG_PS_LOCK_POS);	/* close positve group */
-							pscSys->workingPsIdAddress[p->id] = NULL;
-							pscSys->workingPsCount -= 1;
-						}
-					break;
-				default :
-					break;
-			}
-
-		}
-	}
-}
-
-int	getDischarePhase(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrlSys, DpfCentralCtrl_t *cc2m)
-{
-	float ip, ipMax;
-	if (pscSys->cycleCount < 0) return NDP_CS_CHAREG;
-
-	//if (((pscSys->cycleCount >= 0) && (pscSys->cycleCount <= 10)) ||ctrlSys->mDiag.ipAcq < 5.0) return NDP_CS_INVERSE;
-	if (ctrlSys->mDiag.ipAcq.data[pscSys->cycleIndx] < 5.0) return NDP_CS_INVERSE;
-
-	if (pscSys->cycleCount < cc2m->FBStartTime) return NDP_IP_RAMP_UP_NO_FB;
-
-	ip = ctrlSys->mDiag.ipAcq.data[pscSys->cycleIndx];
-	ipMax = cc2m->IPmax;
-	if ((pscSys->cycleCount >= cc2m->FBStartTime) && (ip < ipMax*0.95)) return NDP_IP_RAMP_UP_FB;
-
-	return NDP_IP_FLATTOP_RAMP_DOWN;
-}
-
-
-
-void plasCurrentControl(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrlSys)
-{
-	int 						i,indx,t0indx;
-	float						delta_ip;
-	float						ipf0;			/* iPF(t=t0), null field condition */
-	incrementPidController_t	dPid;
-	PowerSupplyAndCoils_type		*p;
-	float						multPlasCoil, Lp, Rp, Ip, delta_t, psi_pf0, alpha;
-
-	/* plsma current control */
-	indx = pscSys->cycleIndx;
-
-	dPid.option = ctrlSys->ipControl.controller.pidOption;
-	dPid.e[0] = ctrlSys->mDiag.ipAcq.data[indx-2] - ctrlSys->ipControl.target.data[indx-2];
-	dPid.e[1] = ctrlSys->mDiag.ipAcq.data[indx-1] - ctrlSys->ipControl.target.data[indx-1];
-	dPid.e[2] = ctrlSys->mDiag.ipAcq.data[indx] - ctrlSys->ipControl.target.data[indx];
-	dPid.Ts = pscSys->controlPeriodTime;
-	dPid.Kp = ctrlSys->ipControl.controller.Kp[indx];
-	dPid.Ti = ctrlSys->ipControl.controller.Ti[indx];
-	dPid.Td = ctrlSys->ipControl.controller.Td[indx];
-	delta_ip = IncrementPidCal(&dPid);
-
-	switch (ctrlSys->ctrlMode)
-	{
-		case CTRL_ISOFLUX :
-			delta_ip -= ctrlSys->isofluxCtrl.deltaIp;			/* if isoFlux control */
-			break;
-
-		case CTRL_GAP :
-			break;
-
-		case CTRL_RZIP :
-		default :
-		delta_ip -= ctrlSys->rControl.deltaIp;			/*  rzIp control */
-	}
-
-	/* calculate delta_Ipf, from delta_Ip:
-
-		delta_Ipf(i) = alpha * Ipf(i,t=t0),　　极向场线圈电流只提供磁通变化，不产生磁场。
-
-		Lp*delta_ip = alpha*SUM[Mp,c(i)]*Ipf(i,t=t0) + Rp*Ip*delta_t
-
-	*/
-
-	Lp		= ctrlSys->MutualMatrix.PlasLp;
-	Rp		= ctrlSys->MutualMatrix.PlasRp;
-	Ip		= ctrlSys->mDiag.ipAcq.data[indx];
-	delta_t = pscSys->controlPeriodTime;
-
-
-	/* choice t0, if  Ics(0) >1kA, t0=0, otherwisw t0=5*delta_t */
-	 p = pscSys->workingPsIdAddress[PSC_CS];
-	t0indx = 0;
-	if (p->operationMode == PS_ONLY_NEG_GROUP) t0indx = 5;
-	/*
-	if (p->iAcq.data[cycleCounterToIndex(0) > 1.0)
-		t0indx = 0;
-	else
-		t0indx = 5;
-	*/
-
-	/* calculate alpha:  Lp*delta_ip + Rp*Ip*delta_t = alpha * SUMi{MutualMatrix.PlasCoil[i]*Ipf(t0)[i]} */
-	psi_pf0 = 0.0;
-	for (i=PSC_CS; i<PSC_COUNT; i++)
-	{
-		p = pscSys->workingPsIdAddress[i];
-		if ( p != NULL)
-		{
-			ipf0 = p->iAcq.data[cycleCounterToIndex(t0indx)];
-			psi_pf0 += ipf0*ctrlSys->MutualMatrix.PlasCoil[i];			/* psi0 = SUM[Mpl,ci*ipfi(t0)] */
-		}
-	}
-	alpha = (Lp*delta_ip + Rp*Ip*delta_t)/psi_pf0;
-
-	/* calculate delta_ipf */
-	for (i=PSC_CS; i<PSC_COUNT; i++)
-	{
-		p = pscSys->workingPsIdAddress[i];
-		if ( p != NULL)
-		{
-			ipf0 = p->iAcq.data[cycleCounterToIndex(t0indx)];
-			p->di += alpha*ipf0;						/* delta_ipf = alpha * ipf(t0) */
-		}
-	}
-
-}
-
 void currentfreedBackInit(PowerSupplyAndCoilSystem_t *pscSys)
 {
 	int 						i;
@@ -836,6 +570,34 @@ void currentfreedBackInit(PowerSupplyAndCoilSystem_t *pscSys)
 	{
 		p = pscSys->workingPsIdAddress[i];
 		if ( p != NULL) p->di = 0.0;
+	}
+}
+
+void votageCorrectCal(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrlSys)
+{
+	int 						i, j;
+	PowerSupplyAndCoils_type		*p, *q;
+	float						du;
+
+	/*	decopling,  delta_I -> delta_u */
+	for (i=PSC_CS; i<PSC_COUNT; i++)
+	{
+		p = pscSys->workingPsIdAddress[i];
+		if ( p != NULL)
+		{
+			du = 0.0;
+			for (j=PSC_CS; j<PSC_COUNT; j++)
+			{
+				q = pscSys->workingPsIdAddress[j];
+				if ( q != NULL)
+				{
+					du += (ctrlSys->MutualMatrix.Mcoils[i][j]) * (q->di) / (pscSys->controlPeriodTime);
+					if (i==j) du += (ctrlSys->MutualMatrix.Rcoils[i]) * (q->di);
+				}
+			}
+		}
+		p->du = du;
+		p->sumDu += du;
 	}
 }
 
@@ -867,33 +629,24 @@ void currentfreedBackControl(PowerSupplyAndCoilSystem_t *pscSys, freedBackContro
 	}
 
 }
-
-void votageCorrectCal(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrlSys)
+void sendCtrlAngleToPs(int id, powerSupplyCtrlCmd_t *psCmd)
 {
-	int 						i, j;
-	PowerSupplyAndCoils_type		*p, *q;
-	float						du;
-
-	/*	decopling,  delta_I -> delta_u */
-	for (i=PSC_CS; i<PSC_COUNT; i++)
-	{
-		p = pscSys->workingPsIdAddress[i];
-		if ( p != NULL)
+	switch  (psCmd->cmdType == CMD_PS_POS)
 		{
-			du = 0.0;
-			for (j=PSC_CS; j<PSC_COUNT; j++)
-			{
-				q = pscSys->workingPsIdAddress[j];
-				if ( q != NULL)
-				{
-					du += (ctrlSys->MutualMatrix.Mcoils[i][j]) * (q->di) / (pscSys->controlPeriodTime);
-					if (i==j) du += (ctrlSys->MutualMatrix.Rcoils[i]) * (q->di);
-				}
-			}
+		case CMD_PS_POS:
+	//		/* send */psCmd->alphaPos; /* to PS(id) postive set  ?????????????????*/
+			break;
+
+		case CMD_PS_NEG:
+	//		/* send */psCmd->alphaNeg; /* to PS(id) negtive set  */
+			break;
+
+		case CMD_PS_POS_NEG:
+			/* circle current operation */
+	//		/* send */psCmd->alphaPos; /* to PS(id) postive set  */
+	//		psCmd->alphaNeg; /* to PS(id) negtive set  */
+			break;
 		}
-		p->du = du;
-		p->sumDu += du;
-	}
 }
 
 void calculatePsCtrlAngle(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrlSys, bool forceNoBFCntrl)
@@ -983,25 +736,32 @@ void calculatePsCtrlAngle(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t
 		}
 	}
 }
-
-void sendCtrlAngleToPs(int id, powerSupplyCtrlCmd_t *psCmd)
+void plasmalessDischarge(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrlSys)
 {
-	switch  (psCmd->cmdType == CMD_PS_POS)
+	bool		forceNoBFCntrl;
+	//int		idCircleCurrent;
+	//PowerSupplyAndCoils_type  *p;
+
+	if (pscSys->readyPsCount > 0) unlockPscSysCheck(pscSys);
+
+	if (ctrlSys->doFreedBackCntrl)
 		{
-		case CMD_PS_POS:
-			/* send */psCmd->alphaPos; /* to PS(id) postive set  ?????????????????*/
-			break;
-
-		case CMD_PS_NEG:
-			/* send */psCmd->alphaNeg; /* to PS(id) negtive set  */
-			break;
-
-		case CMD_PS_POS_NEG:
-			/* circle current operation */
-			/* send */psCmd->alphaPos; /* to PS(id) postive set  */
-			psCmd->alphaNeg; /* to PS(id) negtive set  */
-			break;
+			/* PF coil current freed back control di->du */
+			currentfreedBackInit(pscSys);				/* set delta_di = 0 */
+			currentfreedBackControl(pscSys, ctrlSys);		/* delta_di = pid(i_acq-i_Target) */
+			votageCorrectCal(pscSys, ctrlSys);			/* du = M*di + Rdi, sumDu += du */
+			forceNoBFCntrl = 0;
+			calculatePsCtrlAngle(pscSys, ctrlSys, forceNoBFCntrl);	/* calclate control angle alpha */
 		}
+	else
+		{
+			forceNoBFCntrl = 1;
+			calculatePsCtrlAngle(pscSys, ctrlSys, forceNoBFCntrl);
+		}
+
+	PsOperationStatusCheck(pscSys);
+
+	if (pscSys->workingPsCount > 0) lockPscSysCheck(pscSys);
 }
 
 void horizontaPositionControl(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrlSys)
@@ -1060,7 +820,6 @@ void horizontaPositionControl(PowerSupplyAndCoilSystem_t *pscSys, freedBackContr
 
 }
 
-
 void verticalPositionControl(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrlSys)
 {
 	int						indx;
@@ -1110,6 +869,135 @@ void verticalPositionControl(PowerSupplyAndCoilSystem_t *pscSys, freedBackContro
 	ctrlSys->zControl.deltaIp = 0.0;
 }
 
+int	cycleCounterToIndex(int cycleCounter)
+{
+	/*
+		time step          :-7000............................cycleCounter......................................7000      for MAX_DISCHARGE_TIME = 14000
+		waveForm data :     0    1    2    3 ......................index.......................................13999   index = 7000 + cycleCounter
+	*/
+	return MAX_DISCHARGE_TIME/2+cycleCounter;
+}
+
+void plasCurrentControl(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrlSys)
+{
+	int 						i,indx,t0indx;
+	float						delta_ip;
+	float						ipf0;			/* iPF(t=t0), null field condition */
+	incrementPidController_t	dPid;
+	PowerSupplyAndCoils_type		*p;
+	//float	multPlasCoil;
+	float	Lp, Rp, Ip, delta_t, psi_pf0, alpha;
+
+	/* plsma current control */
+	indx = pscSys->cycleIndx;
+
+	dPid.option = ctrlSys->ipControl.controller.pidOption;
+	dPid.e[0] = ctrlSys->mDiag.ipAcq.data[indx-2] - ctrlSys->ipControl.target.data[indx-2];
+	dPid.e[1] = ctrlSys->mDiag.ipAcq.data[indx-1] - ctrlSys->ipControl.target.data[indx-1];
+	dPid.e[2] = ctrlSys->mDiag.ipAcq.data[indx] - ctrlSys->ipControl.target.data[indx];
+	dPid.Ts = pscSys->controlPeriodTime;
+	dPid.Kp = ctrlSys->ipControl.controller.Kp[indx];
+	dPid.Ti = ctrlSys->ipControl.controller.Ti[indx];
+	dPid.Td = ctrlSys->ipControl.controller.Td[indx];
+	delta_ip = IncrementPidCal(&dPid);
+
+	switch (ctrlSys->ctrlMode)
+	{
+		case CTRL_ISOFLUX :
+			delta_ip -= ctrlSys->isofluxCtrl.deltaIp;			/* if isoFlux control */
+			break;
+
+		case CTRL_GAP :
+			break;
+
+		case CTRL_RZIP :
+		default :
+		delta_ip -= ctrlSys->rControl.deltaIp;			/*  rzIp control */
+	}
+
+	/* calculate delta_Ipf, from delta_Ip:
+
+		delta_Ipf(i) = alpha * Ipf(i,t=t0),　　极向场线圈电流只提供磁通变化，不产生磁场。
+
+		Lp*delta_ip = alpha*SUM[Mp,c(i)]*Ipf(i,t=t0) + Rp*Ip*delta_t
+
+	*/
+
+	Lp		= ctrlSys->MutualMatrix.PlasLp;
+	Rp		= ctrlSys->MutualMatrix.PlasRp;
+	Ip		= ctrlSys->mDiag.ipAcq.data[indx];
+	delta_t = pscSys->controlPeriodTime;
+
+
+	/* choice t0, if  Ics(0) >1kA, t0=0, otherwisw t0=5*delta_t */
+	 p = pscSys->workingPsIdAddress[PSC_CS];
+	t0indx = 0;
+	if (p->operationMode == PS_ONLY_NEG_GROUP) t0indx = 5;
+	/*
+	if (p->iAcq.data[cycleCounterToIndex(0) > 1.0)
+		t0indx = 0;
+	else
+		t0indx = 5;
+	*/
+
+	/* calculate alpha:  Lp*delta_ip + Rp*Ip*delta_t = alpha * SUMi{MutualMatrix.PlasCoil[i]*Ipf(t0)[i]} */
+	psi_pf0 = 0.0;
+	for (i=PSC_CS; i<PSC_COUNT; i++)
+	{
+		p = pscSys->workingPsIdAddress[i];
+		if ( p != NULL)
+		{
+			ipf0 = p->iAcq.data[cycleCounterToIndex(t0indx)];
+			psi_pf0 += ipf0*ctrlSys->MutualMatrix.PlasCoil[i];			/* psi0 = SUM[Mpl,ci*ipfi(t0)] */
+		}
+	}
+	alpha = (Lp*delta_ip + Rp*Ip*delta_t)/psi_pf0;
+
+	/* calculate delta_ipf */
+	for (i=PSC_CS; i<PSC_COUNT; i++)
+	{
+		p = pscSys->workingPsIdAddress[i];
+		if ( p != NULL)
+		{
+			ipf0 = p->iAcq.data[cycleCounterToIndex(t0indx)];
+			p->di += alpha*ipf0;						/* delta_ipf = alpha * ipf(t0) */
+		}
+	}
+
+}
+
+void firstPlasmaDischarge(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrlSys, bool forceNoBFCntrl)
+{
+
+	if (pscSys->readyPsCount > 0) unlockPscSysCheck(pscSys);
+	if (forceNoBFCntrl)
+		{
+			/*  during plasma breakdown or test dischare */
+			calculatePsCtrlAngle(pscSys, ctrlSys, forceNoBFCntrl);
+		}
+	else if (ctrlSys->doFreedBackCntrl)
+		{
+			/* Ip < 50 kA */
+			/* PF coil current freed back control di->du */
+			currentfreedBackInit(pscSys);				/* set delta_di = 0 */
+			currentfreedBackControl(pscSys, ctrlSys);		/* delta_di = pid(i_acq-i_Target) */
+			votageCorrectCal(pscSys, ctrlSys);			/* du = M*di/dt + Rdi, sumDu += du */
+			calculatePsCtrlAngle(pscSys, ctrlSys, 0);			/* calclate control angle alpha */
+		}
+	else
+		{
+			currentfreedBackInit(pscSys);				/* set delta_di = 0 */
+			horizontaPositionControl(pscSys, ctrlSys);
+			verticalPositionControl(pscSys, ctrlSys);
+			plasCurrentControl(pscSys, ctrlSys);
+			currentfreedBackControl(pscSys, ctrlSys);		/* delta_di = pid(i_acq-i_Target) */
+			votageCorrectCal(pscSys, ctrlSys);			/* du = M*di + Rdi/dt, sumDu += du */
+			calculatePsCtrlAngle(pscSys, ctrlSys, 0);			/* calclate control angle alpha */
+		}
+
+	if (pscSys->workingPsCount > 0) lockPscSysCheck(pscSys);
+}
+
 void isoFluxControl(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrlSys)
 {
 	int						i, j, indx;
@@ -1155,14 +1043,184 @@ void isoFluxControl(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrl
 	ctrlSys->isofluxCtrl.deltaIp = (delta_flux + Rp*Ip*delta_t)/Lp;
 }
 
-int	cycleCounterToIndex(int cycleCounter)
+
+
+void normalPlasmaDischarge(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrlSys, int discharePhase)
 {
-	/*
-		time step          :-7000............................cycleCounter......................................7000      for MAX_DISCHARGE_TIME = 14000
-		waveForm data :     0    1    2    3 ......................index.......................................13999   index = 7000 + cycleCounter
-	*/
-	return MAX_DISCHARGE_TIME/2+cycleCounter;
+	bool		forceNoBFCntrl;
+
+	switch (discharePhase)
+		{
+		case NDP_CS_CHAREG :
+			if (pscSys->readyPsCount > 0) unlockPscSysCheck(pscSys);
+
+			if (ctrlSys->doFreedBackCntrl)
+				{
+					/* PF coil current freed back control di->du */
+					currentfreedBackInit(pscSys);				/* set delta_di = 0 */
+					currentfreedBackControl(pscSys, ctrlSys);		/* delta_di = pid(i_acq-i_Target) */
+					votageCorrectCal(pscSys, ctrlSys);			/* du = M*di/dt + Rdi, sumDu += du */
+					forceNoBFCntrl = 0;
+					calculatePsCtrlAngle(pscSys, ctrlSys, forceNoBFCntrl);	/* calclate control angle alpha */
+				}
+			else
+				{
+					forceNoBFCntrl = 1;
+					calculatePsCtrlAngle(pscSys, ctrlSys, forceNoBFCntrl);
+				}
+
+			break;
+
+		case NDP_CS_INVERSE :
+
+			forceNoBFCntrl = 1;
+			calculatePsCtrlAngle(pscSys, ctrlSys, forceNoBFCntrl);
+			break;
+
+		case NDP_IP_RAMP_UP_NO_FB :
+//			ctrlSys->disFail.disrupt;
+
+			currentfreedBackInit(pscSys);				/* set delta_di = 0 */
+			currentfreedBackControl(pscSys, ctrlSys);		/* delta_di = pid(i_acq-i_Target) */
+			votageCorrectCal(pscSys, ctrlSys);			/* du = M*di + Rdi/dt, sumDu += du */
+			calculatePsCtrlAngle(pscSys, ctrlSys, 0);			/* calclate control angle alpha */
+			break;
+
+		case NDP_IP_RAMP_UP_FB :
+		case NDP_IP_FLATTOP_RAMP_DOWN:
+			currentfreedBackInit(pscSys);				/* set delta_di = 0 */
+			switch (ctrlSys->ctrlMode)
+			{
+				case CTRL_ISOFLUX :
+					isoFluxControl(pscSys, ctrlSys);
+					break;
+
+				case CTRL_GAP :
+					break;
+
+				case CTRL_RZIP :
+				default :
+					horizontaPositionControl(pscSys, ctrlSys);
+					verticalPositionControl(pscSys, ctrlSys);
+			}
+			plasCurrentControl(pscSys, ctrlSys);
+			currentfreedBackControl(pscSys, ctrlSys);		/* delta_di = pid(i_acq-i_Target) */
+			votageCorrectCal(pscSys, ctrlSys);			/* du = M*di + Rdi, sumDu += du */
+			calculatePsCtrlAngle(pscSys, ctrlSys, 0);			/* calclate control angle alpha */
+			if (pscSys->workingPsCount > 0) lockPscSysCheck(pscSys);
+			break;
+
+		default:
+			break;
+
+		PsOperationStatusCheck(pscSys);
+
+		}
+
 }
+
+void dischareFailureHandle(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrlSys)
+{
+	int						i,indx;
+	PowerSupplyAndCoils_type		*p;
+	powerSupplyCtrlCmd_t 		psCmd;
+	float						u,ud;
+
+	//float pi  = 3.1415926;
+
+	indx = pscSys->cycleIndx;
+	for (i=PSC_CS; i<PSC_COUNT; i++)
+	{
+		p = pscSys->workingPsIdAddress[i];
+		if (p != NULL)
+		{
+			switch (p->operationStatus)
+			{
+				case PS_POS_FULL_OPERATION :
+				case PS_POS_PART_OPERATION :
+					if (p->iAcq.data[pscSys->cycleIndx] > 0.0)
+						{
+							ud = p->vTarget.data[indx];
+							u = ud/(1.35*p->u2l*pscSys->VotageMGforPF/3000.0);
+							psCmd.cmdType = CMD_PS_POS;
+							psCmd.alphaPos = acos(u);
+							sendCtrlAngleToPs(p->id, &psCmd);
+						}
+					else
+						{
+							lockPs(p, SIG_PS_LOCK_POS);	/* close PS positive set  */
+							pscSys->workingPsIdAddress[p->id] = NULL;
+							pscSys->workingPsCount -= 1;
+						}
+					break;
+
+				case PS_CIRCLE_CURRENT_OPERATION :
+							lockPs(p, SIG_PS_LOCK_POS_NEG);
+							pscSys->workingPsIdAddress[p->id] = NULL;
+							pscSys->workingPsCount -= 1;
+							break;
+
+				case PS_NEG_PART_OPERATION :
+							lockPs(p, SIG_PS_LOCK_POS_NEG);
+							pscSys->workingPsIdAddress[p->id] = NULL;
+							pscSys->workingPsCount -= 1;
+					break;
+
+				case PS_NEG_FULL_OPERATION :
+					if (p->iAcq.data[pscSys->cycleIndx] > 0.0)
+						{
+							ud = p->vTarget.data[indx];
+							u = ud/(1.35*p->u2l*pscSys->VotageMGforPF/3000.0);
+							psCmd.cmdType = CMD_PS_NEG;
+							psCmd.alphaNeg = acos(-u);
+							sendCtrlAngleToPs(p->id, &psCmd);
+						}
+					else
+						{
+							lockPs(p, SIG_PS_LOCK_POS);	/* close positve group */
+							pscSys->workingPsIdAddress[p->id] = NULL;
+							pscSys->workingPsCount -= 1;
+						}
+					break;
+				default :
+					break;
+			}
+
+		}
+	}
+}
+
+int	getDischarePhase(PowerSupplyAndCoilSystem_t *pscSys, freedBackControl_t *ctrlSys, DpfCentralCtrl_t *cc2m)
+{
+	float ip, ipMax;
+	if (pscSys->cycleCount < 0) return NDP_CS_CHAREG;
+
+	//if (((pscSys->cycleCount >= 0) && (pscSys->cycleCount <= 10)) ||ctrlSys->mDiag.ipAcq < 5.0) return NDP_CS_INVERSE;
+	if (ctrlSys->mDiag.ipAcq.data[pscSys->cycleIndx] < 5.0) return NDP_CS_INVERSE;
+
+	if (pscSys->cycleCount < cc2m->FBStartTime) return NDP_IP_RAMP_UP_NO_FB;
+
+	ip = ctrlSys->mDiag.ipAcq.data[pscSys->cycleIndx];
+	ipMax = cc2m->IPmax;
+	if ((pscSys->cycleCount >= cc2m->FBStartTime) && (ip < ipMax*0.95)) return NDP_IP_RAMP_UP_FB;
+
+	return NDP_IP_FLATTOP_RAMP_DOWN;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
